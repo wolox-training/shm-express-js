@@ -1,4 +1,4 @@
-# WTraining
+# WTraining [![Build Status](https://travis-ci.org/wolox-training/shm-express-js.svg?branch=master)](https://travis-ci.org/wolox-training/shm-express-js)
 
 WTraining
 
