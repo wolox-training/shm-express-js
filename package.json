@@ -55,13 +55,14 @@
     }
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "jwt-simple": "^0.5.1",
     "morgan": "^1.9.1",
-    "sequelize": "^4.34.0",
     "pg": "^7.4.1",
+    "sequelize": "^4.34.0",
     "umzug": "^2.1.0",
     "winston": "^2.4.0",
     "winston-daily-rotate-file": "^1.7.2"
