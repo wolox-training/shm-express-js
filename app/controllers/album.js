@@ -29,7 +29,7 @@ const getPhotos = async (req, res) => {
     logger.info(MESSAGE_OK);
     res.status(200).send(imgUrl);
   } catch (error) {
-    res.send(error.message);
+    res.status(400).send(error.message);
   }
 };
 
