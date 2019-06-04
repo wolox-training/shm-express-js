@@ -1,36 +1,30 @@
-const axios = require('axios');
-const logger = require('../../app/logger');
-const PREVIOUS_MESSAGE = 'Making request..';
-const MESSAGE_OK = 'Request made correctly, sending ...';
+const albumsService = require('../services/albums'),
+  logger = require('../logger'),
+  message = require('../constants');
 
-const getAlbums = async (req, res) => {
-  const urlAlbums = 'https://jsonplaceholder.typicode.com/albums';
-
-  try {
-    logger.info(PREVIOUS_MESSAGE);
-    const { data } = await axios.get(urlAlbums);
-    logger.info(MESSAGE_OK);
-    res.status(200).send(data);
-  } catch (error) {
-    res.send(error.message);
-  }
+exports.getAlbumsInventory = (req, res, next) => {
+  logger.info(`${message.PREVIOUS_MESSAGE} to list of albums`);
+  albumsService
+    .getAlbums()
+    .then(response => {
+      logger.info(message.MESSAGE_OK);
+      res.status(200).send(response);
+    })
+    .catch(next);
 };
 
-const getPhotos = async (req, res) => {
-  try {
-    if (req.params.id > 10 || isNaN(req.params.id)) {
-      throw Error('Make sure your request is correct');
-    }
-    logger.info(PREVIOUS_MESSAGE);
-    const urlPhotos = `https://jsonplaceholder.typicode.com/photos?albumId=${req.params.id}`;
-    const { data } = await axios.get(urlPhotos);
-    const imgUrl = data.map(({ url }) => url);
-
-    logger.info(MESSAGE_OK);
-    res.status(200).send(imgUrl);
-  } catch (error) {
-    res.status(400).send(error.message);
+exports.getPhotos = (req, res, next) => {
+  const idAlbum = req.params.id;
+  if (idAlbum > 100 || isNaN(idAlbum)) {
+    throw Error('Make sure your request is correct');
   }
+  logger.info(`${message.PREVIOUS_MESSAGE} to list of images of an album by the id: ${idAlbum}`);
+  albumsService
+    .getPhotosById(idAlbum)
+    .then(response => {
+      const AlbumImgUrl = response.map(({ url }) => url);
+      logger.info(message.MESSAGE_OK);
+      res.status(200).send(AlbumImgUrl);
+    })
+    .catch(next);
 };
-
-module.exports = { getAlbums, getPhotos };
