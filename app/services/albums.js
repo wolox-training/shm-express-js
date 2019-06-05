@@ -1,8 +1,8 @@
 const request = require('request-promise');
 
-const errors = require('../errors'),
-  apiError = require('../constants'),
-  { resources } = require('../../config').common;
+const errors = require('../errors');
+const apiError = require('../constants');
+const { resources } = require('../../config').common;
 
 exports.getAlbums = () => {
   const options = {
@@ -16,10 +16,10 @@ exports.getAlbums = () => {
   );
 };
 
-exports.getPhotosById = id => {
+exports.getPhotosBy = parameter => {
   const options = {
     method: 'GET',
-    uri: resources.photos_url + id,
+    uri: resources.photos_url + parameter,
     json: true
   };
 

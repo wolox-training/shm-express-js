@@ -1,14 +1,15 @@
-const albumsService = require('../services/albums'),
-  logger = require('../logger'),
-  message = require('../constants');
+const albumsService = require('../services/albums');
+const logger = require('../logger');
+const message = require('../constants');
+const errors = require('../errors');
 
-exports.getAlbumsInventory = (req, res, next) => {
+exports.getAlbums = (req, res, next) => {
   logger.info(`${message.PREVIOUS_MESSAGE} to list of albums`);
-  albumsService
+  return albumsService
     .getAlbums()
     .then(response => {
       logger.info(message.MESSAGE_OK);
-      res.status(200).send(response);
+      return res.status(200).send(response);
     })
     .catch(next);
 };
@@ -16,15 +17,15 @@ exports.getAlbumsInventory = (req, res, next) => {
 exports.getPhotos = (req, res, next) => {
   const idAlbum = req.params.id;
   if (idAlbum > 100 || isNaN(idAlbum)) {
-    throw Error('Make sure your request is correct');
+    return next(errors.invalidParameters('Please enter a valid ID'));
   }
   logger.info(`${message.PREVIOUS_MESSAGE} to list of images of an album by the id: ${idAlbum}`);
-  albumsService
-    .getPhotosById(idAlbum)
+  return albumsService
+    .getPhotosBy(idAlbum)
     .then(response => {
-      const AlbumImgUrl = response.map(({ url }) => url);
+      const albumImgUrl = response.map(({ url }) => url);
       logger.info(message.MESSAGE_OK);
-      res.status(200).send(AlbumImgUrl);
+      return res.status(200).send(albumImgUrl);
     })
     .catch(next);
 };
