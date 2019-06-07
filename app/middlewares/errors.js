@@ -5,7 +5,9 @@ const DEFAULT_STATUS_CODE = 500;
 
 const statusCodes = {
   [errors.DATABASE_ERROR]: 503,
-  [errors.DEFAULT_ERROR]: 500
+  [errors.DEFAULT_ERROR]: 500,
+  [errors.ALBUM_API_ERROR]: 501,
+  [errors.INVALID_PARAMETERS_ERROR]: 400
 };
 
 exports.handle = (error, req, res, next) => {

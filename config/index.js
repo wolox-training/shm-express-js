@@ -41,6 +41,11 @@ const config = {
     session: {
       header_name: 'authorization',
       secret: process.env.NODE_API_SESSION_SECRET
+    },
+    resources: {
+      url_album_api: process.env.URL_ALBUM_API,
+      albums_endpoint: process.env.ALBUMS_ENDPOINT,
+      photos_endpoint: process.env.PHOTOS_ENDPOINT
     }
   }
 };
