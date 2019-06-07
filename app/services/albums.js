@@ -15,13 +15,11 @@ exports.getAlbums = () => {
   );
 };
 
-exports.getPhotosBy = (parameterName, parameter) => {
+exports.getPhotosBy = qs => {
   const options = {
     method: 'GET',
     uri: `${resources.url_album_api}${resources.photos_endpoint}`,
-    qs: {
-      [parameterName]: parameter
-    },
+    qs,
     json: true
   };
 

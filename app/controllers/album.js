@@ -15,13 +15,15 @@ exports.getAlbums = (req, res, next) => {
 };
 
 exports.getPhotos = (req, res, next) => {
-  const albumId = req.params.id;
-  if (albumId > 100 || isNaN(albumId)) {
+  const params = {
+    albumId: req.params.id
+  };
+  if (params.albumId > 100 || isNaN(params.albumId)) {
     return next(errors.invalidParameters('Please enter a valid ID'));
   }
-  logger.info(`${message.PREVIOUS_MESSAGE} to list of images of an album by the id: ${albumId}`);
+  logger.info(`${message.PREVIOUS_MESSAGE} to list of images of an album by the id: ${params.albumId}`);
   return albumsService
-    .getPhotosBy('albumId', albumId)
+    .getPhotosBy(params)
     .then(response => {
       const albumImgUrl = response.map(({ url }) => url);
       logger.info(message.MESSAGE_OK);
