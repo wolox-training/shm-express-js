@@ -43,8 +43,9 @@ const config = {
       secret: process.env.NODE_API_SESSION_SECRET
     },
     resources: {
-      album_url: process.env.URL_ALBUMS,
-      photos_url: process.env.URL_PHOTOS
+      url_album_api: process.env.URL_ALBUM_API,
+      albums_endpoint: process.env.ALBUMS_ENDPOINT,
+      photos_endpoint: process.env.PHOTOS_ENDPOINT
     }
   }
 };
