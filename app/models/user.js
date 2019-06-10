@@ -5,13 +5,11 @@ module.exports = (sequelize, DataTypes) => {
     {
       firstName: {
         allowNull: false,
-        type: DataTypes.STRING,
-        field: 'first_name'
+        type: DataTypes.STRING
       },
       lastName: {
         allowNull: false,
-        type: DataTypes.STRING,
-        field: 'last_name'
+        type: DataTypes.STRING
       },
       email: {
         unique: true,
@@ -23,7 +21,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING
       }
     },
-    {}
+    {
+      underscored: true
+    }
   );
 
   return User;
