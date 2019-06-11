@@ -1,20 +1,23 @@
-const bcrypt = require('bcrypt');
-
+const validations = require('../util');
+const userService = require('../services/users');
 const errors = require('../errors');
+const logger = require('../logger');
 
 exports.createUser = (req, res, next) => {
-  const regexPass = /^([a-z0-9]){8,}$/i;
-  const regexMail = /^[a-z0-9._-]+@wolox.(co|cl|com|com.ar)+$/i;
-  if (!regexPass.test(req.body.password) || !regexMail.test(req.body.email)) {
+  const user = req.body;
+  if (!validations.paramsValidation(user.password, user.email)) {
     return next(errors.invalidParameters('The email or password does not meet the conditions.'));
   }
-  const hash = bcrypt.hashSync(req.body.password, 10);
-  return res.status(200).send({
-    user: {
-      name: req.body.name,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      password: hash
-    }
-  });
+  return validations
+    .passwordEncryption(user)
+    .then(userService.userRegister)
+    .then(response => {
+      logger.info(`User ${user.firstName} ${user.lastName} created successfully`);
+      return res.status(201).send({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        message: `User has been created successfully with ID ${response.id}`
+      });
+    })
+    .catch(next);
 };
