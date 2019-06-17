@@ -18,9 +18,6 @@ exports.getPhotos = (req, res, next) => {
   const params = {
     albumId: req.params.id
   };
-  // if (params.albumId > 100 || isNaN(params.albumId)) {
-  //   return next(errors.invalidParameters('Please enter a valid ID'));
-  // }
   logger.info(`${message.PREVIOUS_MESSAGE} to list of images of an album by the id: ${params.albumId}`);
   return albumsService
     .getPhotosBy(params)

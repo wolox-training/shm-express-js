@@ -5,4 +5,4 @@ const checkvalidationResult = (req, res, next) => {
   return errors.isEmpty() ? next() : res.status(422).json({ errors: errors.array() });
 };
 
-exports.checkSchema = schema => [checkSchema(schema), checkvalidationResult];
+exports.checkUser = schema => [checkSchema(schema), checkvalidationResult];
