@@ -1,13 +1,9 @@
 const validations = require('../util');
 const userService = require('../services/users');
-const errors = require('../errors');
 const logger = require('../logger');
 
 exports.createUser = (req, res, next) => {
   const user = req.body;
-  if (!validations.paramsValidation(user.password, user.email)) {
-    return next(errors.invalidParameters('The email or password does not meet the conditions.'));
-  }
   return validations
     .passwordEncryption(user)
     .then(userService.userRegister)
