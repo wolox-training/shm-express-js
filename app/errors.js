@@ -14,3 +14,6 @@ exports.albumError = message => internalError(message, exports.ALBUM_API_ERROR);
 
 exports.INVALID_PARAMETERS_ERROR = 'invalid_parameters_error';
 exports.invalidParameters = message => internalError(message, exports.INVALID_PARAMETERS_ERROR);
+
+exports.PASSWORD_ENCRYPTION_ERROR = 'password_encryption_error.';
+exports.encryptionError = message => internalError(message, exports.PASSWORD_ENCRYPTION_ERROR);
