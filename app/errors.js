@@ -18,3 +18,7 @@ exports.invalidParameters = message => internalError(message, exports.INVALID_PA
 exports.PASSWORD_ENCRYPTION_ERROR = 'password_encryption_error.';
 exports.encryptionError = () =>
   internalError('Error trying to encrypt the password.', exports.PASSWORD_ENCRYPTION_ERROR);
+
+exports.PASSWORD_DECRYPTION_ERROR = 'password_decryption_error.';
+exports.decryptionError = () =>
+  internalError('Error trying to decrypt the password.', exports.PASSWORD_DECRYPTION_ERROR);

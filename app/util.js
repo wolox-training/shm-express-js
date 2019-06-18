@@ -13,4 +13,14 @@ exports.passwordEncryption = user =>
       throw errors.encryptionError();
     });
 
-exports.passwordDecryption = (password, hash) => bcrypt.compare(password, hash);
+exports.passwordDecryption = (user, password) =>
+  bcrypt
+    .compare(password, user.password)
+    .then(registered => ({
+      firstName: user.dataValues.firstName,
+      lastName: user.dataValues.lastName,
+      registered
+    }))
+    .catch(() => {
+      throw errors.decryptionError();
+    });

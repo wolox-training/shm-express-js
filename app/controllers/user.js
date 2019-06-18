@@ -22,19 +22,11 @@ exports.signInUser = (req, res, next) => {
   const { email, password } = req.body;
   return userService
     .findUser(email)
-    .then(async response => {
-      logger.info(`User ${response.firstName} ${response.lastName} ${response.lastName} found successfully`);
-      const check = await validations.passwordDecryption(password, response.password);
-      return { ...response.dataValues, check };
-    })
-    .then(response => {
-      console.log(response);
-      return res.status(201).send({
-        firstName: response.firstName,
-        lastName: response.lastName,
-        check: response.check,
-        message: 'User has been found successfully'
-      });
-    })
+    .then(response => (response ? validations.passwordDecryption(response, password) : false))
+    .then(response =>
+      response
+        ? res.status(201).send({ ...response, email, token: '123' })
+        : res.status(500).send({ message: 'Incorrect username or password' })
+    )
     .catch(next);
 };
