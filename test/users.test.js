@@ -2,6 +2,7 @@ const request = require('supertest');
 const dictum = require('dictum.js');
 
 const app = require('../app');
+const { User } = require('../app/models');
 
 const controller = request(app);
 
@@ -15,10 +16,19 @@ describe('POST /users', () => {
         email: 'john.katz@wolox.co',
         password: '12345678'
       })
-      .then(response => {
-        expect(response.statusCode).toBe(201);
-        return dictum.chai(response, 'Successful test creating user');
-      }));
+      .then(response =>
+        User.findOne({
+          where: { email: 'john.katz@wolox.co' }
+        }).then(userDb => {
+          const { firstName, lastName, email } = userDb;
+          expect({ firstName, lastName, email }).toStrictEqual({
+            firstName: 'John',
+            lastName: 'Katzenbach',
+            email: 'john.katz@wolox.co'
+          });
+          dictum.chai(response, 'Successful test creating user');
+        })
+      ));
 
   test('User creation test when using an email in use', () => {
     controller
@@ -39,8 +49,8 @@ describe('POST /users', () => {
             password: '12345test'
           })
           .then(response => {
-            expect(response.statusCode).toBe(503);
-            return dictum.chai(response, 'Test when using an email in use');
+            expect(response.statusCode).toBe(400);
+            dictum.chai(response, 'Successful test trying to create an user with an email in use.');
           })
       );
   });
@@ -56,18 +66,19 @@ describe('POST /users', () => {
       })
       .then(response => {
         expect(response.statusCode).toBe(400);
-        return dictum.chai(response, 'Test when the password meets conditions');
+        dictum.chai(response, 'Test when the password meets conditions');
       }));
 
   test('User creation test when required parameters are not sent', () =>
     controller
       .post('/users')
       .send({
-        email: 'john.katz@wolox.co',
+        firstName: 'John',
+        lastName: 'Katzenbach',
         password: '12345678'
       })
       .then(response => {
-        expect(response.statusCode).toBe(503);
-        return dictum.chai(response, 'Test when required parameters are not sent');
+        expect(response.statusCode).toBe(400);
+        dictum.chai(response, 'Test when required parameters are not sent');
       }));
 });

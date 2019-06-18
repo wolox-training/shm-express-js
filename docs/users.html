@@ -28,14 +28,15 @@
   "internal_code": "invalid_parameters_error"
 }</pre></div></div></div></div><div class="panel panel-default"><div class="panel-heading" role="tab" id="heading-users-POST"><h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="collapse-users-POST" href="#collapse-users-POST">POST /users</a></h4></div><div id="collapse-users-POST" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-users-POST"><div class="panel-body"><h4>Request Data</h4><div class="container"><h5>Headers</h5><pre>{
   "content-type": "application/json",
-  "content-length": 52
+  "content-length": 66
 }</pre><h5>Body</h5><pre>{
-  "email": "john.katz@wolox.co",
+  "firstName": "John",
+  "lastName": "Katzenbach",
   "password": "12345678"
-}</pre></div></div><div class="panel-body"><h4>Response Data</h4><div class="container"><h5>Status: 503</h5><h5>Headers</h5><pre>{
+}</pre></div></div><div class="panel-body"><h4>Response Data</h4><div class="container"><h5>Status: 400</h5><h5>Headers</h5><pre>{
   "content-type": "application/json",
-  "content-length": 52
+  "content-length": 66
 }</pre><h5>Body</h5><pre>{
-  "message": "Error processing request in database.",
-  "internal_code": "database_error"
+  "message": "The email or password does not meet the conditions.",
+  "internal_code": "invalid_parameters_error"
 }</pre></div></div></div></div></div></body></html>
