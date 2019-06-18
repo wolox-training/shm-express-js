@@ -1,15 +1,15 @@
 exports.signUpValidator = {
   firstName: {
     isLength: {
-      errorMessage: 'First Name should be at least 3 chars long and maximum of 50 chars',
-      options: { min: 3, max: 50 }
+      errorMessage: 'First Name should be at least 2 chars long and maximum of 50 chars',
+      options: { min: 2, max: 50 }
     },
     trim: true
   },
   lastName: {
     isLength: {
-      errorMessage: 'Last Name should be at least 3 chars long and maximum of 50 chars',
-      options: { min: 3, max: 50 }
+      errorMessage: 'Last Name should be at least 2 chars long and maximum of 50 chars',
+      options: { min: 2, max: 50 }
     },
     trim: true
   },
