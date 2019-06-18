@@ -12,3 +12,5 @@ exports.passwordEncryption = user =>
     .catch(() => {
       throw errors.encryptionError();
     });
+
+exports.passwordDecryption = (password, hash) => bcrypt.compare(password, hash);
