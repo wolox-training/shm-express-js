@@ -1,3 +1,5 @@
+const { User } = require('../models');
+
 exports.signUpValidator = {
   firstName: {
     isLength: {
@@ -17,6 +19,10 @@ exports.signUpValidator = {
     errorMessage: 'Please enter a valid email address',
     isEmail: true,
     trim: true,
+    custom: {
+      options: value => User.findOne({ where: { email: value } }).then(response => !response),
+      errorMessage: 'The email is already registered'
+    },
     matches: {
       errorMessage: 'The email does not belong to the Wolox domains',
       options: [/^[a-z0-9._-]+@wolox.(co|cl|com|ar|com.ar)+$/i]

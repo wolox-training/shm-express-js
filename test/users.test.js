@@ -14,7 +14,8 @@ describe('POST /users', () => {
         firstName: 'John',
         lastName: 'Katzenbach',
         email: 'john.katz@wolox.co',
-        password: '12345678'
+        password: '12345678',
+        confirm_password: '12345678'
       })
       .then(response =>
         User.findOne({
@@ -36,7 +37,8 @@ describe('POST /users', () => {
         firstName: 'Maria Jose',
         lastName: 'Perez',
         email: 'jose.perez@wolox.com.ar',
-        password: 'test12345'
+        password: 'test12345',
+        confirm_password: 'test12345'
       })
       .then(() =>
         controller
@@ -45,14 +47,15 @@ describe('POST /users', () => {
             firstName: 'Jose',
             lastName: 'Perez',
             email: 'jose.perez@wolox.com.ar',
-            password: '12345test'
+            password: '12345test',
+            confirm_password: '12345test'
           })
           .then(response => {
-            const { message, internal_code } = response.body;
-            expect({ status: response.statusCode, message, internal_code }).toStrictEqual({
-              status: 503,
-              message: 'Error processing request in database.',
-              internal_code: 'database_error'
+            const { message, internalCode } = response.body;
+            expect({ status: response.statusCode, message, internalCode }).toStrictEqual({
+              status: 400,
+              message: 'Invalid request parameters',
+              internalCode: 'bad_request'
             });
             dictum.chai(response, 'Successful test trying to create an user with an email in use.');
           })
@@ -65,14 +68,15 @@ describe('POST /users', () => {
         firstName: 'John',
         lastName: 'Katzenbach',
         email: 'john.katz@wolox.co',
-        password: '123'
+        password: '123',
+        confirm_password: '123'
       })
       .then(response => {
-        const { message, internal_code } = response.body;
-        expect({ status: response.statusCode, message, internal_code }).toStrictEqual({
+        const { message, internalCode } = response.body;
+        expect({ status: response.statusCode, message, internalCode }).toStrictEqual({
           status: 400,
-          message: 'The email or password does not meet the conditions.',
-          internal_code: 'invalid_parameters_error'
+          message: 'Invalid request parameters',
+          internalCode: 'bad_request'
         });
         dictum.chai(response, 'Test when the password meets conditions');
       }));
@@ -83,14 +87,15 @@ describe('POST /users', () => {
       .send({
         lastName: 'Katzenbach',
         email: 'john.katz@wolox.co',
-        password: '12345678'
+        password: '12345678',
+        confirm_password: '12345678'
       })
       .then(response => {
-        const { message, internal_code } = response.body;
-        expect({ status: response.statusCode, message, internal_code }).toStrictEqual({
-          status: 503,
-          message: 'Error processing request in database.',
-          internal_code: 'database_error'
+        const { message, internalCode } = response.body;
+        expect({ status: response.statusCode, message, internalCode }).toStrictEqual({
+          status: 400,
+          message: 'Invalid request parameters',
+          internalCode: 'bad_request'
         });
         dictum.chai(response, 'Test when required parameters are not sent');
       }));
