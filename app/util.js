@@ -19,6 +19,7 @@ exports.passwordDecryption = (user, password) =>
     .then(registered => ({
       firstName: user.dataValues.firstName,
       lastName: user.dataValues.lastName,
+      email: user.dataValues.email,
       registered
     }))
     .catch(() => {

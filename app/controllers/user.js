@@ -1,6 +1,10 @@
+// const jwt = require('jwt-simple');
+const jwt = require('jsonwebtoken');
+
 const validations = require('../util');
 const userService = require('../services/users');
 const logger = require('../logger');
+const config = require('../../config').common.session;
 
 exports.createUser = (req, res, next) => {
   const user = req.body;
@@ -23,10 +27,11 @@ exports.signInUser = (req, res, next) => {
   return userService
     .findUser(email)
     .then(response => (response ? validations.passwordDecryption(response, password) : false))
-    .then(response =>
-      response
-        ? res.status(201).send({ ...response, email, token: '123' })
-        : res.status(500).send({ message: 'Incorrect username or password' })
+    .then(user => (user.registered ? jwt.sign(user, config.seed) : false))
+    .then(token =>
+      token
+        ? res.status(200).send({ token })
+        : res.status(401).send({ message: 'Incorrect username or password' })
     )
     .catch(next);
 };

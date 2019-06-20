@@ -11,5 +11,5 @@ exports.userRegister = user =>
 exports.findUser = email =>
   users.findOne({ where: { email } }).catch(err => {
     logger.info('Error trying to find the user');
-    return Promise.reject(errors.databaseError(`${err}`));
+    throw errors.databaseError(`${err}`);
   });

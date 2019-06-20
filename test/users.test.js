@@ -13,7 +13,8 @@ describe('POST /users', () => {
         firstName: 'John',
         lastName: 'Katzenbach',
         email: 'john.katz@wolox.co',
-        password: '12345678'
+        password: '12345678',
+        confirm_password: '12345678'
       })
       .then(response => {
         expect(response.statusCode).toBe(201);
@@ -70,4 +71,29 @@ describe('POST /users', () => {
         expect(response.statusCode).toBe(503);
         return dictum.chai(response, 'Test when required parameters are not sent');
       }));
+});
+
+describe('POST /users/sessions', () => {
+  test('Sign in', () =>
+    controller
+      .post('/users')
+      .send({
+        firstName: 'John',
+        lastName: 'Katzenbach',
+        email: 'john.katz@wolox.co',
+        password: '12345678',
+        confirm_password: '12345678'
+      })
+      .then(() =>
+        controller
+          .post('/users/sessions')
+          .send({
+            email: 'john.katz@wolox.co',
+            password: '12345678'
+          })
+          .then(response => {
+            expect(response.statusCode).toBe(200);
+            dictum.chai(response, 'Sign in');
+          })
+      ));
 });
