@@ -10,9 +10,8 @@ exports.createUser = (req, res, next) => {
     .then(response => {
       logger.info(`User ${user.firstName} ${user.lastName} created successfully`);
       return res.status(201).send({
-        firstName: user.firstName,
-        lastName: user.lastName,
-        message: `User has been created successfully with ID ${response.id}`
+        firstName: response.firstName,
+        lastName: response.lastName
       });
     })
     .catch(next);
