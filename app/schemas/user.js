@@ -1,15 +1,17 @@
+const { User } = require('../models');
+
 exports.signUpValidator = {
   firstName: {
     isLength: {
-      errorMessage: 'First Name should be at least 3 chars long and maximum of 50 chars',
-      options: { min: 3, max: 50 }
+      errorMessage: 'First Name should be at least 2 chars long and maximum of 50 chars',
+      options: { min: 2, max: 50 }
     },
     trim: true
   },
   lastName: {
     isLength: {
-      errorMessage: 'Last Name should be at least 3 chars long and maximum of 50 chars',
-      options: { min: 3, max: 50 }
+      errorMessage: 'Last Name should be at least 2 chars long and maximum of 50 chars',
+      options: { min: 2, max: 50 }
     },
     trim: true
   },
@@ -17,6 +19,10 @@ exports.signUpValidator = {
     errorMessage: 'Please enter a valid email address',
     isEmail: true,
     trim: true,
+    custom: {
+      options: value => User.findOne({ where: { email: value } }).then(response => !response),
+      errorMessage: 'The email is already registered'
+    },
     matches: {
       errorMessage: 'The email does not belong to the Wolox domains',
       options: [/^[a-z0-9._-]+@wolox.(co|cl|com|ar|com.ar)+$/i]

@@ -1,7 +1,6 @@
 const albumsService = require('../services/albums');
 const logger = require('../logger');
 const message = require('../constants');
-// const errors = require('../errors');
 
 exports.getAlbums = (req, res, next) => {
   logger.info(`${message.PREVIOUS_MESSAGE} to list of albums`);

@@ -1,28 +1,234 @@
-<html><head><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" /><script src="https://code.jquery.com/jquery-1.12.2.min.js"></script><script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script><style> pre { width: 95%; } </style></head><body><div class="container"><div class="jumbotron"><h1>Users</h1></div><div class="panel panel-default"><div class="panel-heading" role="tab" id="heading-users-POST"><h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="collapse-users-POST" href="#collapse-users-POST">POST /users</a></h4></div><div id="collapse-users-POST" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-users-POST"><div class="panel-body"><h4>Request Data</h4><div class="container"><h5>Headers</h5><pre>{
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+  <script src="https://code.jquery.com/jquery-1.12.2.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <style>
+    pre {
+      width: 95%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="jumbotron">
+      <h1>Users</h1>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading" role="tab" id="heading-users-POST">
+        <h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true"
+            aria-controls="collapse-users-POST" href="#collapse-users-POST">POST /users</a></h4>
+      </div>
+      <div id="collapse-users-POST" class="panel-collapse collapse" role="tabpanel"
+        aria-labelledby="heading-users-POST">
+        <div class="panel-body">
+          <h4>Request Data</h4>
+          <div class="container">
+            <h5>Headers</h5>
+            <pre>{
   "content-type": "application/json",
   "content-length": 125
-}</pre><h5>Body</h5><pre>{
+}</pre>
+            <h5>Body</h5>
+            <pre>{
   "firstName": "John",
   "lastName": "Katzenbach",
   "email": "john.katz@wolox.co",
   "password": "12345678",
   "confirm_password": "12345678"
-}</pre></div></div><div class="panel-body"><h4>Response Data</h4><div class="container"><h5>Status: 201</h5><h5>Headers</h5><pre>{
+}</pre>
+          </div>
+        </div>
+        <div class="panel-body">
+          <h4>Response Data</h4>
+          <div class="container">
+            <h5>Status: 201</h5>
+            <h5>Headers</h5>
+            <pre>{
   "content-type": "application/json",
   "content-length": 125
-}</pre><h5>Body</h5><pre>{
+}</pre>
+            <h5>Body</h5>
+            <pre>{
   "firstName": "John",
   "lastName": "Katzenbach",
   "message": "User has been created successfully with ID 1"
-}</pre></div></div></div></div><div class="panel panel-default"><div class="panel-heading" role="tab" id="heading-users-sessions-POST"><h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="collapse-users-sessions-POST" href="#collapse-users-sessions-POST">POST /users/sessions</a></h4></div><div id="collapse-users-sessions-POST" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-users-sessions-POST"><div class="panel-body"><h4>Request Data</h4><div class="container"><h5>Headers</h5><pre>{
+}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading" role="tab" id="heading-users-POST">
+        <h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true"
+            aria-controls="collapse-users-POST" href="#collapse-users-POST">POST /users</a></h4>
+      </div>
+      <div id="collapse-users-POST" class="panel-collapse collapse" role="tabpanel"
+        aria-labelledby="heading-users-POST">
+        <div class="panel-body">
+          <h4>Request Data</h4>
+          <div class="container">
+            <h5>Headers</h5>
+            <pre>{
   "content-type": "application/json",
-  "content-length": 52
-}</pre><h5>Body</h5><pre>{
+  "content-length": 127
+}</pre>
+            <h5>Body</h5>
+            <pre>{
+  "firstName": "Jose",
+  "lastName": "Perez",
+  "email": "jose.perez@wolox.com.ar",
+  "password": "12345test",
+  "confirm_password": "12345test"
+}</pre>
+          </div>
+        </div>
+        <div class="panel-body">
+          <h4>Response Data</h4>
+          <div class="container">
+            <h5>Status: 400</h5>
+            <h5>Headers</h5>
+            <pre>{
+  "content-type": "application/json",
+  "content-length": 127
+}</pre>
+            <h5>Body</h5>
+            <pre>{
+  "errors": [
+    {
+      "location": "body",
+      "param": "email",
+      "value": "jose.perez@wolox.com.ar",
+      "msg": "The email is already registered"
+    }
+  ],
+  "message": "Invalid request parameters",
+  "internalCode": "bad_request"
+}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading" role="tab" id="heading-users-POST">
+        <h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true"
+            aria-controls="collapse-users-POST" href="#collapse-users-POST">POST /users</a></h4>
+      </div>
+      <div id="collapse-users-POST" class="panel-collapse collapse" role="tabpanel"
+        aria-labelledby="heading-users-POST">
+        <div class="panel-body">
+          <h4>Request Data</h4>
+          <div class="container">
+            <h5>Headers</h5>
+            <pre>{
+  "content-type": "application/json",
+  "content-length": 115
+}</pre>
+            <h5>Body</h5>
+            <pre>{
+  "firstName": "John",
+  "lastName": "Katzenbach",
   "email": "john.katz@wolox.co",
-  "password": "12345678"
-}</pre></div></div><div class="panel-body"><h4>Response Data</h4><div class="container"><h5>Status: 200</h5><h5>Headers</h5><pre>{
+  "password": "123",
+  "confirm_password": "123"
+}</pre>
+          </div>
+        </div>
+        <div class="panel-body">
+          <h4>Response Data</h4>
+          <div class="container">
+            <h5>Status: 400</h5>
+            <h5>Headers</h5>
+            <pre>{
   "content-type": "application/json",
-  "content-length": 52
-}</pre><h5>Body</h5><pre>{
+  "content-length": 115
+}</pre>
+            <h5>Body</h5>
+            <pre>{
+  "errors": [
+    {
+      "location": "body",
+      "param": "password",
+      "value": "123",
+      "msg": "Password should be at least 8 chars long"
+    }
+  ],
+  "message": "Invalid request parameters",
+  "internalCode": "bad_request"
+}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading" role="tab" id="heading-users-POST">
+        <h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true"
+            aria-controls="collapse-users-POST" href="#collapse-users-POST">POST /users</a></h4>
+      </div>
+      <div id="collapse-users-POST" class="panel-collapse collapse" role="tabpanel"
+        aria-labelledby="heading-users-POST">
+        <div class="panel-body">
+          <h4>Request Data</h4>
+          <div class="container">
+            <h5>Headers</h5>
+            <pre>{
+  "content-type": "application/json",
+  "content-length": 106
+}</pre>
+            <h5>Body</h5>
+            <pre>{
+  "lastName": "Katzenbach",
+  "email": "john.katz@wolox.co",
+<<<<<<< HEAD
+  "password": "12345678"
+}</pre>
+          </div>
+        </div>
+        <div class="panel-body">
+          <h4>Response Data</h4>
+          <div class="container">
+            <h5>Status: 200</h5>
+            <h5>Headers</h5>
+            <pre>{
+=======
+  "password": "12345678",
+  "confirm_password": "12345678"
+}</pre>
+          </div>
+        </div>
+        <div class="panel-body">
+          <h4>Response Data</h4>
+          <div class="container">
+            <h5>Status: 400</h5>
+            <h5>Headers</h5>
+            <pre>{
+>>>>>>> middlewares
+  "content-type": "application/json",
+  "content-length": 106
+}</pre>
+            <h5>Body</h5>
+            <pre>{
+<<<<<<< HEAD
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdE5hbWUiOiJKb2huIiwibGFzdE5hbWUiOiJLYXR6ZW5iYWNoIiwiZW1haWwiOiJqb2huLmthdHpAd29sb3guY28iLCJyZWdpc3RlcmVkIjp0cnVlLCJpYXQiOjE1NjEwNDk3Njl9.cdjqnOQUHz0SamFL3jJ9rMVT3V4oGd-soTH-KAg89IQ"
-}</pre></div></div></div></div></div></body></html>
+=======
+  "errors": [
+    {
+      "location": "body",
+      "param": "firstName",
+      "msg": "First Name should be at least 2 chars long and maximum of 50 chars"
+    }
+  ],
+  "message": "Invalid request parameters",
+  "internalCode": "bad_request"
+>>>>>>> middlewares
+}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
