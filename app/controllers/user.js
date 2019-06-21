@@ -1,12 +1,10 @@
-// const jwt = require('jwt-simple');
-const jwt = require('jsonwebtoken');
-
 const validations = require('../util');
 const userService = require('../services/users');
 const logger = require('../logger');
-const config = require('../../config').common.session;
+const errors = require('../errors');
 
 exports.createUser = (req, res, next) => {
+  logger.info('createUser method start.');
   const user = req.body;
   return validations
     .passwordEncryption(user)
@@ -22,15 +20,20 @@ exports.createUser = (req, res, next) => {
 };
 
 exports.signInUser = (req, res, next) => {
+  logger.info('SignInUser method start.');
   const { email, password } = req.body;
+  let user = {};
   return userService
     .findUser(email)
-    .then(response => (response ? validations.passwordDecryption(response, password) : false))
-    .then(user => (user.registered ? jwt.sign(user, config.seed) : false))
+    .then(foundUser => {
+      user = foundUser;
+      return validations.passwordDecryption(password, foundUser.password);
+    })
+    .then(registered => (registered ? validations.generateToken(user) : null))
     .then(token =>
       token
         ? res.status(200).send({ token })
-        : res.status(401).send({ message: 'Incorrect username or password' })
+        : res.status(401).send(errors.signUpError('Your password is incorrect.'))
     )
     .catch(next);
 };

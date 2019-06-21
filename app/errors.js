@@ -22,3 +22,6 @@ exports.encryptionError = () =>
 exports.PASSWORD_DECRYPTION_ERROR = 'password_decryption_error.';
 exports.decryptionError = () =>
   internalError('Error trying to decrypt the password.', exports.PASSWORD_DECRYPTION_ERROR);
+
+exports.SIGN_UP_ERROR = 'sign_up_error';
+exports.signUpError = message => internalError(message, exports.SIGN_UP_ERROR);

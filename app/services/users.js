@@ -9,7 +9,11 @@ exports.userRegister = user =>
   });
 
 exports.findUser = email =>
-  User.findOne({ where: { email } }).catch(err => {
+  User.findOne({
+    where: { email },
+    raw: true,
+    attributes: ['id', 'firstName', 'lastName', 'email', 'password']
+  }).catch(err => {
     logger.info('Error trying to find the user');
     throw errors.databaseError(`${err}`);
   });

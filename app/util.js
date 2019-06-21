@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const errors = require('./errors');
 const { session } = require('../config').common;
@@ -14,15 +15,10 @@ exports.passwordEncryption = user =>
       throw errors.encryptionError();
     });
 
-exports.passwordDecryption = (user, password) =>
-  bcrypt
-    .compare(password, user.password)
-    .then(registered => ({
-      firstName: user.dataValues.firstName,
-      lastName: user.dataValues.lastName,
-      email: user.dataValues.email,
-      registered
-    }))
-    .catch(() => {
-      throw errors.decryptionError();
-    });
+exports.passwordDecryption = (password, hash) =>
+  bcrypt.compare(password, hash).catch(() => {
+    throw errors.decryptionError();
+  });
+
+exports.generateToken = ({ id, firstName, lastName, email }) =>
+  jwt.sign({ id, firstName, lastName, email }, session.seed);

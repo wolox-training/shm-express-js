@@ -1,8 +1,10 @@
 const request = require('supertest');
 const dictum = require('dictum.js');
+const jwt = require('jsonwebtoken');
 
 const app = require('../app');
 const { User } = require('../app/models');
+const config = require('../config').common.session;
 
 const controller = request(app);
 
@@ -102,7 +104,7 @@ describe('POST /users', () => {
 });
 
 describe('POST /users/sessions', () => {
-  test('Sign in', () =>
+  test('Successful test when sign in', () =>
     controller
       .post('/users')
       .send({
@@ -119,9 +121,17 @@ describe('POST /users/sessions', () => {
             email: 'john.katz@wolox.co',
             password: '12345678'
           })
-          .then(response => {
-            expect(response.statusCode).toBe(200);
-            dictum.chai(response, 'Sign in');
+          .then(userSignIn => ({
+            response: userSignIn,
+            token: jwt.verify(userSignIn.body.token, config.seed)
+          }))
+          .then(({ response, token }) => {
+            const { firstName, lastName } = token;
+            expect({ firstName, lastName }).toStrictEqual({
+              firstName: 'John',
+              lastName: 'Katzenbach'
+            });
+            dictum.chai(response, 'Successful login');
           })
       ));
 });
