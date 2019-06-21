@@ -37,3 +37,22 @@ exports.signInUser = (req, res, next) => {
     )
     .catch(next);
 };
+
+exports.getUserList = (req, res, next) => {
+  logger.info('getUserList method start.');
+  const { limit, page } = req.query;
+  const offset = req.skip;
+  return userService
+    .findAllUser(limit, offset)
+    .then(response => {
+      const itemCount = response.count;
+      const pageCount = Math.ceil(response.count / limit);
+      res.status(200).send({
+        users: response.rows,
+        pageCount,
+        itemCount,
+        page
+      });
+    })
+    .catch(next);
+};

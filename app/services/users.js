@@ -17,3 +17,14 @@ exports.findUser = email =>
     logger.info('Error trying to find the user');
     throw errors.databaseError(`${err}`);
   });
+
+exports.findAllUser = (limit, offset) =>
+  User.findAndCountAll({
+    limit,
+    offset,
+    raw: true,
+    attributes: ['id', 'firstName', 'lastName', 'email']
+  }).catch(err => {
+    logger.info('Error trying to find the user');
+    throw errors.databaseError(`${err}`);
+  });
