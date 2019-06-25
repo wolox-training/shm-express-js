@@ -10,6 +10,6 @@ exports.passwordEncryption = user =>
       ...user,
       password
     }))
-    .catch(() => {
-      throw errors.encryptionError();
+    .catch(err => {
+      throw errors.encryptionError(`${err.message}`);
     });
