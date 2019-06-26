@@ -24,3 +24,8 @@ exports.generateToken = ({ id, firstName, lastName, email }) =>
   jwt.signAsync({ id, firstName, lastName, email }, session.seed).catch(() => {
     throw errors.generateTokenError();
   });
+
+exports.validateToken = token =>
+  jwt.verifyAsync(token, session.seed).catch(() => {
+    throw errors.verifyTokenError();
+  });

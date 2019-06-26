@@ -29,3 +29,7 @@ exports.signUpError = message => internalError(message, exports.SIGN_UP_ERROR);
 exports.GENERATE_TOKEN_ERROR = 'generate_token_error.';
 exports.generateTokenError = () =>
   internalError('Error trying to generate the token.', exports.GENERATE_TOKEN_ERROR);
+
+exports.VERIFY_TOKEN_ERROR = 'verify_token_error.';
+exports.verifyTokenError = () =>
+  internalError('Error trying to verify the token.', exports.VERIFY_TOKEN_ERROR);

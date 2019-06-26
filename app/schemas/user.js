@@ -66,7 +66,7 @@ exports.signInValidator = {
 exports.tokenValidator = {
   token: {
     custom: {
-      options: value => validations.tokenValidate(value),
+      options: value => validations.validateToken(value).then(response => response),
       errorMessage: 'Invalid token'
     }
   }
