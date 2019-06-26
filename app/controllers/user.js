@@ -56,3 +56,20 @@ exports.getUserList = (req, res, next) => {
     })
     .catch(next);
 };
+
+exports.createAdminUser = (req, res, next) => {
+  logger.info('createAdminUser method start.');
+  req.body = { role: 'admin' };
+  const user = req.body;
+  return validations
+    .passwordEncryption(user)
+    .then(userService.changeRole(user.email))
+    .then(response => {
+      logger.info(`User ${user.firstName} ${user.lastName} created successfully`);
+      return res.status(201).send({
+        firstName: response.firstName,
+        lastName: response.lastName
+      });
+    })
+    .catch(next);
+};

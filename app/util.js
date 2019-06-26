@@ -20,7 +20,7 @@ exports.passwordDecryption = (password, hash) =>
     throw errors.decryptionError();
   });
 
-exports.generateToken = ({ id, firstName, lastName, email }) =>
-  jwt.sign({ id, firstName, lastName, email }, session.seed);
+exports.generateToken = ({ id, firstName, lastName, email, role }) =>
+  jwt.sign({ id, firstName, lastName, email, role }, session.seed);
 
 exports.tokenValidate = token => jwt.verify(token, session.seed);
