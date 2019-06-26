@@ -25,3 +25,7 @@ exports.decryptionError = () =>
 
 exports.SIGN_UP_ERROR = 'sign_up_error';
 exports.signUpError = message => internalError(message, exports.SIGN_UP_ERROR);
+
+exports.GENERATE_TOKEN_ERROR = 'generate_token_error.';
+exports.generateTokenError = () =>
+  internalError('Error trying to generate the token.', exports.GENERATE_TOKEN_ERROR);
