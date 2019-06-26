@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken-promisified');
 
 const errors = require('./errors');
 const { session } = require('../config').common;
@@ -21,6 +21,11 @@ exports.passwordDecryption = (password, hash) =>
   });
 
 exports.generateToken = ({ id, firstName, lastName, email, role }) =>
-  jwt.sign({ id, firstName, lastName, email, role }, session.seed);
+  jwt.signAsync({ id, firstName, lastName, email, role }, session.seed).catch(() => {
+    throw errors.generateTokenError();
+  });
 
-exports.tokenValidate = token => jwt.verify(token, session.seed);
+exports.validateToken = token =>
+  jwt.verifyAsync(token, session.seed).catch(() => {
+    throw errors.verifyTokenError();
+  });

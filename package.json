@@ -61,7 +61,7 @@
     "express": "^4.16.2",
     "express-paginate": "^1.0.0",
     "express-validator": "^5.3.1",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken-promisified": "^1.0.3",
     "jwt-simple": "^0.5.1",
     "morgan": "^1.9.1",
     "pg": "^7.4.1",
