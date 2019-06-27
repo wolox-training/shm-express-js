@@ -22,18 +22,20 @@ exports.createUser = (req, res, next) => {
 exports.signInUser = (req, res, next) => {
   logger.info('SignInUser method start.');
   const { email, password } = req.body;
-  let user = {};
   return userService
     .findUser(email)
     .then(foundUser => {
-      user = foundUser;
-      return validations.passwordDecryption(password, foundUser.password);
+      if (foundUser) {
+        return validations
+          .passwordDecryption(password, foundUser.password)
+          .then(registered => (registered ? validations.generateToken(foundUser) : null));
+      }
+      return null;
     })
-    .then(registered => (registered ? validations.generateToken(user) : null))
     .then(token =>
       token
         ? res.status(200).send({ token })
-        : res.status(401).send(errors.signUpError('Your password is incorrect.'))
+        : res.status(401).send(errors.signUpError('Your email or password is incorrect.'))
     )
     .catch(next);
 };
