@@ -1,6 +1,6 @@
 const request = require('supertest');
 const dictum = require('dictum.js');
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken-promisified');
 
 const app = require('../app');
 const { User } = require('../app/models');
@@ -121,10 +121,12 @@ describe('POST /users/sessions', () => {
             email: 'john.katz@wolox.co',
             password: '12345678'
           })
-          .then(userSignIn => ({
-            response: userSignIn,
-            token: jwt.verify(userSignIn.body.token, config.seed)
-          }))
+          .then(userSignIn =>
+            jwt.verifyAsync(userSignIn.body.token, config.seed).then(token => ({
+              response: userSignIn,
+              token
+            }))
+          )
           .then(({ response, token }) => {
             const { firstName, lastName } = token;
             expect({ firstName, lastName }).toStrictEqual({
