@@ -11,6 +11,7 @@ const {
   signUpAdminUserValidator
 } = require('./schemas/user');
 const { albumByIdValidator } = require('./schemas/album');
+const { isAdminUser } = require('./middlewares/sessionValidator');
 
 exports.init = app => {
   app.get('/health', healthCheck);
@@ -19,5 +20,11 @@ exports.init = app => {
   app.post('/users', checkValidationSchema(signUpValidator), createUser);
   app.post('/users/sessions', checkValidationSchema(signInValidator), signInUser);
   app.get('/users', checkValidationSchema(tokenValidator), paginate.middleware(4, 10), getUserList);
-  app.post('/admin/users', checkValidationSchema(signUpAdminUserValidator), createAdminUser);
+  app.post(
+    '/admin/users',
+    checkValidationSchema(tokenValidator),
+    checkValidationSchema(signUpAdminUserValidator),
+    isAdminUser,
+    createAdminUser
+  );
 };

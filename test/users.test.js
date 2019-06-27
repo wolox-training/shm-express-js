@@ -1,6 +1,6 @@
 const request = require('supertest');
 const dictum = require('dictum.js');
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken-promisified');
 
 const app = require('../app');
 const { User } = require('../app/models');
@@ -121,10 +121,12 @@ describe('POST /users/sessions', () => {
             email: 'john.katz@wolox.co',
             password: '12345678'
           })
-          .then(userSignIn => ({
-            response: userSignIn,
-            token: jwt.verify(userSignIn.body.token, config.seed)
-          }))
+          .then(userSignIn =>
+            jwt.verifyAsync(userSignIn.body.token, config.seed).then(token => ({
+              response: userSignIn,
+              token
+            }))
+          )
           .then(({ response, token }) => {
             const { firstName, lastName } = token;
             expect({ firstName, lastName }).toStrictEqual({
@@ -170,6 +172,99 @@ describe('GET /users', () => {
               page: 1
             });
             dictum.chai(response, 'Test get user list');
+          })
+      ));
+});
+
+describe('POST /admin/users', () => {
+  test('Successful test when registering admin user', () =>
+    controller
+      .post('/users')
+      .send({
+        firstName: 'John',
+        lastName: 'Katzenbach',
+        email: 'john.katz@wolox.co',
+        password: '12345678',
+        confirm_password: '12345678',
+        role: 'admin'
+      })
+      .then(() =>
+        controller
+          .post('/users/sessions')
+          .send({
+            email: 'john.katz@wolox.co',
+            password: '12345678'
+          })
+          .then(({ body }) =>
+            controller
+              .post('/admin/users')
+              .set({ token: body.token })
+              .send({
+                firstName: 'Jose',
+                lastName: 'Perez',
+                email: 'jose.perez@wolox.com.ar',
+                password: '12345test'
+              })
+          )
+          .then(response =>
+            User.findOne({
+              where: { email: 'jose.perez@wolox.com.ar' }
+            }).then(({ firstName, lastName, email, role }) => {
+              expect({ firstName, lastName, email, role }).toStrictEqual({
+                firstName: 'Jose',
+                lastName: 'Perez',
+                email: 'jose.perez@wolox.com.ar',
+                role: 'admin'
+              });
+              dictum.chai(response, 'Successful test creating admin user');
+            })
+          )
+      ));
+
+  test('Successful test when updating regular user to administrator', () =>
+    controller
+      .post('/users')
+      .send({
+        firstName: 'John',
+        lastName: 'Katzenbach',
+        email: 'john.k@wolox.co',
+        password: '12345678',
+        confirm_password: '12345678',
+        role: 'admin'
+      })
+      .then(() =>
+        controller.post('/users').send({
+          firstName: 'Jose',
+          lastName: 'Perez',
+          email: 'jose.perez@wolox.com.ar',
+          password: '12345678',
+          confirm_password: '12345678'
+        })
+      )
+      .then(() =>
+        controller
+          .post('/users/sessions')
+          .send({
+            email: 'john.k@wolox.co',
+            password: '12345678'
+          })
+          .then(({ body }) =>
+            controller
+              .post('/admin/users')
+              .set({ token: body.token })
+              .send({
+                firstName: 'Jose',
+                lastName: 'Perez',
+                email: 'jose.perez@wolox.com.ar',
+                password: '12345678'
+              })
+          )
+          .then(response => {
+            expect({ status: response.statusCode, message: response.body.message }).toStrictEqual({
+              status: 201,
+              message: 'User Jose updated to admin'
+            });
+            dictum.chai(response, 'Successful test updating regular user to administrator');
           })
       ));
 });

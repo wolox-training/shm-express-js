@@ -33,3 +33,6 @@ exports.generateTokenError = () =>
 exports.VERIFY_TOKEN_ERROR = 'verify_token_error.';
 exports.verifyTokenError = () =>
   internalError('Error trying to verify the token.', exports.VERIFY_TOKEN_ERROR);
+
+exports.SESSION_ERROR = 'session_error.';
+exports.sessionError = message => internalError(message, exports.SESSION_ERROR);

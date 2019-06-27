@@ -40,9 +40,10 @@ exports.changeRole = email =>
     { role: 'admin' },
     {
       where: { email },
-      returning: true,
-      raw: true
+      raw: true,
+      returning: true
     }
-  ).then(response => {
-    console.log(response);
+  ).catch(() => {
+    logger.info('Error trying to update the user');
+    throw errors.databaseError('Error processing request in database.');
   });

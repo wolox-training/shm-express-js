@@ -29,3 +29,5 @@ exports.validateToken = token =>
   jwt.verifyAsync(token, session.seed).catch(() => {
     throw errors.verifyTokenError();
   });
+
+exports.decodedToken = token => jwt.decode(token);

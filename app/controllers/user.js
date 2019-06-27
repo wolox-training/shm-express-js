@@ -59,17 +59,13 @@ exports.getUserList = (req, res, next) => {
 
 exports.createAdminUser = (req, res, next) => {
   logger.info('createAdminUser method start.');
-  req.body = { role: 'admin' };
-  const user = req.body;
-  return validations
-    .passwordEncryption(user)
-    .then(userService.changeRole(user.email))
-    .then(response => {
-      logger.info(`User ${user.firstName} ${user.lastName} created successfully`);
-      return res.status(201).send({
-        firstName: response.firstName,
-        lastName: response.lastName
-      });
-    })
+  req.body.role = 'admin';
+  return userService
+    .changeRole(req.body.email)
+    .then(updated =>
+      updated[0]
+        ? res.status(201).send({ message: `User ${updated[1][0].firstName} updated to admin` })
+        : exports.createUser(req, res, next)
+    )
     .catch(next);
 };
