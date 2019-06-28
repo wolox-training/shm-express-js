@@ -4,10 +4,11 @@ const errors = require('../errors');
 const apiError = require('../constants');
 const { resources } = require('../../config').common;
 
-exports.getAlbums = () => {
+exports.getAlbums = qs => {
   const options = {
     method: 'GET',
     uri: `${resources.url_album_api}${resources.albums_endpoint}`,
+    qs,
     json: true
   };
   return request(options).catch(err =>
