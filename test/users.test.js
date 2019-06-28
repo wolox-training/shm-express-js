@@ -53,11 +53,11 @@ describe('POST /users', () => {
             confirm_password: '12345test'
           })
           .then(response => {
-            const { message, internalCode } = response.body;
-            expect({ status: response.statusCode, message, internalCode }).toStrictEqual({
+            const { message, internal_code } = response.body;
+            expect({ status: response.statusCode, message, internal_code }).toStrictEqual({
               status: 400,
-              message: 'Invalid request parameters',
-              internalCode: 'bad_request'
+              message: ['The email is already registered'],
+              internal_code: 'bad_request'
             });
             dictum.chai(response, 'Successful test trying to create an user with an email in use.');
           })
@@ -74,11 +74,11 @@ describe('POST /users', () => {
         confirm_password: '123'
       })
       .then(response => {
-        const { message, internalCode } = response.body;
-        expect({ status: response.statusCode, message, internalCode }).toStrictEqual({
+        const { message, internal_code } = response.body;
+        expect({ status: response.statusCode, message, internal_code }).toStrictEqual({
           status: 400,
-          message: 'Invalid request parameters',
-          internalCode: 'bad_request'
+          message: ['Password should be at least 8 chars long'],
+          internal_code: 'bad_request'
         });
         dictum.chai(response, 'Test when the password meets conditions');
       }));
@@ -93,11 +93,11 @@ describe('POST /users', () => {
         confirm_password: '12345678'
       })
       .then(response => {
-        const { message, internalCode } = response.body;
-        expect({ status: response.statusCode, message, internalCode }).toStrictEqual({
+        const { message, internal_code } = response.body;
+        expect({ status: response.statusCode, message, internal_code }).toStrictEqual({
           status: 400,
-          message: 'Invalid request parameters',
-          internalCode: 'bad_request'
+          message: ['First Name should be at least 2 chars long and maximum of 50 chars'],
+          internal_code: 'bad_request'
         });
         dictum.chai(response, 'Test when required parameters are not sent');
       }));

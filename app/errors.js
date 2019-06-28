@@ -13,7 +13,7 @@ exports.ALBUM_API_ERROR = 'error_consuming_album_api';
 exports.albumError = message => internalError(message, exports.ALBUM_API_ERROR);
 
 exports.BAD_REQUEST = 'bad_request';
-exports.badRequest = () => internalError('Invalid request parameters', exports.BAD_REQUEST);
+exports.badRequest = message => internalError(message, exports.BAD_REQUEST);
 
 exports.PASSWORD_ENCRYPTION_ERROR = 'password_encryption_error.';
 exports.encryptionError = () =>
