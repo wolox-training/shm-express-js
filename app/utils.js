@@ -11,9 +11,7 @@ exports.passwordEncryption = user =>
       ...user,
       password
     }))
-    .catch(() => {
-      throw errors.encryptionError();
-    });
+    .catch(errors.encryptionError());
 
 exports.passwordDecryption = (password, hash) =>
   bcrypt.compare(password, hash).catch(() => {
@@ -21,6 +19,11 @@ exports.passwordDecryption = (password, hash) =>
   });
 
 exports.generateToken = ({ id, firstName, lastName, email }) =>
-  jwt.signAsync({ id, firstName, lastName, email }, session.seed).catch(() => {
+  jwt.signAsync({ id, firstName, lastName, email }, session.secret).catch(() => {
     throw errors.generateTokenError();
+  });
+
+exports.validateToken = token =>
+  jwt.verifyAsync(token, session.secret).catch(() => {
+    throw errors.verifyTokenError();
   });

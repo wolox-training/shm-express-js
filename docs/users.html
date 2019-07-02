@@ -73,5 +73,29 @@
   "content-type": "application/json",
   "content-length": 52
 }</pre><h5>Body</h5><pre>{
-  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoiSm9obiIsImxhc3ROYW1lIjoiS2F0emVuYmFjaCIsImVtYWlsIjoiam9obi5rYXR6QHdvbG94LmNvIiwiaWF0IjoxNTYxNzU0MTgwfQ.7Uy38zVYVXJyF38Zx0KdfD77CcExQmIpZUpjLrrwwis"
+  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoiSm9obiIsImxhc3ROYW1lIjoiS2F0emVuYmFjaCIsImVtYWlsIjoiam9obi5rYXR6QHdvbG94LmNvIiwiaWF0IjoxNTYyMDg4ODQ4fQ.xk-LKW-sGx1NRif-iU1REmbxqbw7sIp0nI2M0YUdltY"
+}</pre></div></div></div></div><div class="panel panel-default"><div class="panel-heading" role="tab" id="heading-users-sessions-POST"><h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="collapse-users-sessions-POST" href="#collapse-users-sessions-POST">POST /users/sessions</a></h4></div><div id="collapse-users-sessions-POST" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-users-sessions-POST"><div class="panel-body"><h4>Request Data</h4><div class="container"><h5>Headers</h5><pre>{
+  "content-type": "application/json",
+  "content-length": 52
+}</pre><h5>Body</h5><pre>{
+  "email": "john.katz@wolox.cl",
+  "password": "12345678"
+}</pre></div></div><div class="panel-body"><h4>Response Data</h4><div class="container"><h5>Status: 401</h5><h5>Headers</h5><pre>{
+  "content-type": "application/json",
+  "content-length": 52
+}</pre><h5>Body</h5><pre>{
+  "message": "Your email or password is incorrect.",
+  "internal_code": "sign_up_error"
+}</pre></div></div></div></div><div class="panel panel-default"><div class="panel-heading" role="tab" id="heading-users-sessions-POST"><h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="collapse-users-sessions-POST" href="#collapse-users-sessions-POST">POST /users/sessions</a></h4></div><div id="collapse-users-sessions-POST" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-users-sessions-POST"><div class="panel-body"><h4>Request Data</h4><div class="container"><h5>Headers</h5><pre>{
+  "content-type": "application/json",
+  "content-length": 49
+}</pre><h5>Body</h5><pre>{
+  "email": "john.katz@wolox.co",
+  "password": "12345"
+}</pre></div></div><div class="panel-body"><h4>Response Data</h4><div class="container"><h5>Status: 401</h5><h5>Headers</h5><pre>{
+  "content-type": "application/json",
+  "content-length": 49
+}</pre><h5>Body</h5><pre>{
+  "message": "Your email or password is incorrect.",
+  "internalCode": "sign_up_error"
 }</pre></div></div></div></div></div></body></html>

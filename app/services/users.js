@@ -8,9 +8,9 @@ exports.userRegister = user =>
     throw errors.databaseError('Error processing request in database.');
   });
 
-exports.findUser = email =>
+exports.findUserBy = option =>
   User.findOne({
-    where: { email },
+    where: option,
     raw: true,
     attributes: ['id', 'firstName', 'lastName', 'email', 'password']
   }).catch(err => {
