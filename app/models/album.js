@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       tableName: 'albums'
     }
   );
-  Album.associate = models => Album.belongsTo(models.User, { foreignKey: 'userId' });
+  Album.associate = models => Album.belongsTo(models.User, { foreignKey: 'user_id' });
 
   return Album;
 };
