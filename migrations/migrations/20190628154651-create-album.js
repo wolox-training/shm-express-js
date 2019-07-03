@@ -4,7 +4,7 @@ module.exports = {
     queryInterface.createTable('albums', {
       id: {
         allowNull: false,
-        autoIncrement: true,
+        autoIncrement: false,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
@@ -13,7 +13,14 @@ module.exports = {
         type: Sequelize.STRING
       },
       user_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        references: {
+          model: {
+            tableName: 'users',
+            key: 'id'
+          }
+        }
       },
       created_at: {
         allowNull: false,

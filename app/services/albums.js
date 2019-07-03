@@ -3,6 +3,8 @@ const request = require('request-promise');
 const errors = require('../errors');
 const apiError = require('../constants');
 const { resources } = require('../../config').common;
+const { Album } = require('../models');
+const logger = require('../logger');
 
 exports.getAlbums = qs => {
   const options = {
@@ -28,3 +30,9 @@ exports.getPhotosBy = qs => {
     Promise.reject(errors.albumError(`${apiError.MESSAGE_API_FAILED}. ${err.message}`))
   );
 };
+
+exports.albumRegister = album =>
+  Album.create(album).catch(() => {
+    logger.info(`Error trying to register the album ${album.title}`);
+    throw errors.databaseError('Error processing request in database.');
+  });

@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING
       },
       userId: {
+        allowNull: false,
         type: DataTypes.INTEGER,
         field: 'user_id'
       }
@@ -17,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
       tableName: 'albums'
     }
   );
-  Album.associate = models => Album.belongsTo(models.User, { foreignKey: 'user_id' });
+  Album.associate = models => Album.belongsTo(models.User, { foreignKey: 'userId' });
 
   return Album;
 };

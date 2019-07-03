@@ -1,6 +1,9 @@
 const albumsService = require('../services/albums');
 const logger = require('../logger');
 const message = require('../constants');
+const validations = require('../util');
+const { User } = require('../models');
+const { Album } = require('../models');
 
 exports.getAlbums = (req, res, next) => {
   logger.info(`${message.PREVIOUS_MESSAGE} to list of albums`);
@@ -29,14 +32,26 @@ exports.getPhotos = (req, res, next) => {
 };
 
 exports.buyAlbums = (req, res, next) => {
-  logger.info(`${message.PREVIOUS_MESSAGE} to list of albums`);
+  const user = validations.decodedToken(req.headers.token);
   const qs = {
     id: req.params.id
   };
   return albumsService
     .getAlbums(qs)
     .then(response => {
-      logger.info(message.MESSAGE_OK);
+      const album = {
+        id: response[0].id,
+        title: response[0].title,
+        userId: user.id
+      };
+      albumsService.albumRegister(album).then(() =>
+        User.findAll({
+          include: [Album],
+          raw: true
+        }).then(users => {
+          console.log(users);
+        })
+      );
       return res.status(200).send(response);
     })
     .catch(next);
