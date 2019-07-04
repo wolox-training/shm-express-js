@@ -171,11 +171,11 @@ describe('POST /users/sessions', () => {
             password: '12345'
           })
           .then(response => {
-            const { message, internalCode } = response.body;
-            expect({ status: response.statusCode, message, internalCode }).toStrictEqual({
+            const { message, internal_code } = response.body;
+            expect({ status: response.statusCode, message, internal_code }).toStrictEqual({
               status: 401,
               message: 'Your email or password is incorrect.',
-              internalCode: 'sign_up_error'
+              internal_code: 'sign_up_error'
             });
             dictum.chai(response, 'Test when you sign in with the wrong password');
           })
