@@ -45,3 +45,15 @@ exports.signUpValidator = {
     }
   }
 };
+
+exports.signInValidator = {
+  email: {
+    errorMessage: 'Please enter a valid email address',
+    isEmail: true,
+    trim: true,
+    matches: {
+      errorMessage: 'The email does not belong to the Wolox domains',
+      options: [/^[a-z0-9._-]+@wolox.(co|cl|com|ar|com.ar)+$/i]
+    }
+  }
+};
