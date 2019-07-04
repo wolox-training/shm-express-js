@@ -19,6 +19,8 @@ exports.SIGN_IN_ERROR = 'sign_up_error';
 
 exports.GENERATE_TOKEN_ERROR = 'generate_token_error.';
 
+exports.VERIFY_TOKEN_ERROR = 'verify_token_error.';
+
 exports.databaseError = message => internalError(message, exports.DATABASE_ERROR);
 
 exports.defaultError = message => internalError(message, exports.DEFAULT_ERROR);
@@ -38,6 +40,5 @@ exports.signInError = message => internalError(message, exports.SIGN_IN_ERROR);
 exports.generateTokenError = () =>
   internalError('Error trying to generate the token.', exports.GENERATE_TOKEN_ERROR);
 
-exports.VERIFY_TOKEN_ERROR = 'verify_token_error.';
 exports.verifyTokenError = () =>
   internalError('Error trying to verify the token.', exports.VERIFY_TOKEN_ERROR);
