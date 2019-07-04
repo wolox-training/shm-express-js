@@ -12,7 +12,6 @@ exports.userRegister = user =>
 exports.findUserBy = option =>
   User.findOne({
     where: option,
-    raw: true,
     attributes: ['id', 'firstName', 'lastName', 'email', 'password']
   }).catch(err => {
     logger.info('Error trying to find the user');
@@ -41,7 +40,6 @@ exports.findAllUser = (limit, offset) =>
   User.findAndCountAll({
     limit,
     offset,
-    raw: true,
     attributes: ['id', 'firstName', 'lastName', 'email']
   }).catch(err => {
     logger.info('Error trying to find the users');
