@@ -44,6 +44,6 @@ exports.findAllUser = (limit, offset) =>
     raw: true,
     attributes: ['id', 'firstName', 'lastName', 'email']
   }).catch(err => {
-    logger.info('Error trying to find the user');
+    logger.info('Error trying to find the users');
     throw errors.databaseError(`${err}`);
   });

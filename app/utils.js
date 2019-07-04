@@ -29,20 +29,12 @@ exports.validateToken = token =>
   });
 
 exports.mapperUserList = (usersData, limit, page) => {
-  if (usersData.count) {
-    const itemCount = usersData.count;
-    const pageCount = Math.ceil(usersData.count / limit);
-    return {
-      users: usersData.rows,
-      pageCount,
-      itemCount,
-      page
-    };
-  }
+  const itemCount = usersData.count;
+  const pageCount = Math.ceil(usersData.count / limit);
   return {
-    users: [],
-    pageCount: 0,
-    itemCount: 0,
-    page: 0
+    users: usersData.rows,
+    pageCount,
+    itemCount,
+    page
   };
 };
