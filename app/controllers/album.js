@@ -2,8 +2,6 @@ const albumsService = require('../services/albums');
 const logger = require('../logger');
 const message = require('../constants');
 const validations = require('../util');
-const { User } = require('../models');
-const { Album } = require('../models');
 
 exports.getAlbums = (req, res, next) => {
   logger.info(`${message.PREVIOUS_MESSAGE} to list of albums`);
@@ -44,15 +42,15 @@ exports.buyAlbums = (req, res, next) => {
         title: response[0].title,
         userId: user.id
       };
-      albumsService.albumRegister(album).then(() =>
-        User.findAll({
-          include: [Album],
-          raw: true
-        }).then(users => {
-          console.log(users);
-        })
-      );
-      return res.status(200).send(response);
+      return albumsService.albumRegister(album).then(({ dataValues }) => {
+        logger.info(`Album ${dataValues.title} successfully purchased`);
+        res.status(201).send({
+          album: {
+            id: dataValues.id,
+            title: dataValues.title
+          }
+        });
+      });
     })
     .catch(next);
 };
