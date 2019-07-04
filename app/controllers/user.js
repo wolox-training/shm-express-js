@@ -46,15 +46,7 @@ exports.getUserList = (req, res, next) => {
   const offset = req.skip;
   return userService
     .findAllUser(limit, offset)
-    .then(response => {
-      const itemCount = response.count;
-      const pageCount = Math.ceil(response.count / limit);
-      res.status(200).send({
-        users: response.rows,
-        pageCount,
-        itemCount,
-        page
-      });
-    })
+    .then(foundUsers => validations.mapperUserList(foundUsers, limit, page))
+    .then(response => res.status(200).send(response))
     .catch(next);
 };

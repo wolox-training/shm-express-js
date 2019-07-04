@@ -29,3 +29,22 @@ exports.validateToken = token =>
   jwt.verifyAsync(token, session.seed).catch(() => {
     throw errors.verifyTokenError();
   });
+
+exports.mapperUserList = (usersData, limit, page) => {
+  if (usersData.count) {
+    const itemCount = usersData.count;
+    const pageCount = Math.ceil(usersData.count / limit);
+    return {
+      users: usersData.rows,
+      pageCount,
+      itemCount,
+      page
+    };
+  }
+  return {
+    users: [],
+    pageCount: 0,
+    itemCount: 0,
+    page: 0
+  };
+};
