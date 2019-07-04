@@ -1,10 +1,9 @@
 const request = require('supertest');
 const dictum = require('dictum.js');
-const jwt = require('jsonwebtoken-promisified');
 
 const app = require('../app');
 const { User } = require('../app/models');
-const config = require('../config').common.session;
+const utils = require('../app/utils');
 
 const controller = request(app);
 
@@ -53,11 +52,11 @@ describe('POST /users', () => {
             confirm_password: '12345test'
           })
           .then(response => {
-            const { message, internalCode } = response.body;
-            expect({ status: response.statusCode, message, internalCode }).toStrictEqual({
+            const { message, internal_code } = response.body;
+            expect({ status: response.statusCode, message, internal_code }).toStrictEqual({
               status: 400,
-              message: 'Invalid request parameters',
-              internalCode: 'bad_request'
+              message: ['The email is already registered'],
+              internal_code: 'bad_request'
             });
             dictum.chai(response, 'Successful test trying to create an user with an email in use.');
           })
@@ -74,11 +73,11 @@ describe('POST /users', () => {
         confirm_password: '123'
       })
       .then(response => {
-        const { message, internalCode } = response.body;
-        expect({ status: response.statusCode, message, internalCode }).toStrictEqual({
+        const { message, internal_code } = response.body;
+        expect({ status: response.statusCode, message, internal_code }).toStrictEqual({
           status: 400,
-          message: 'Invalid request parameters',
-          internalCode: 'bad_request'
+          message: ['Password should be at least 8 chars long'],
+          internal_code: 'bad_request'
         });
         dictum.chai(response, 'Test when the password meets conditions');
       }));
@@ -93,27 +92,28 @@ describe('POST /users', () => {
         confirm_password: '12345678'
       })
       .then(response => {
-        const { message, internalCode } = response.body;
-        expect({ status: response.statusCode, message, internalCode }).toStrictEqual({
+        const { message, internal_code } = response.body;
+        expect({ status: response.statusCode, message, internal_code }).toStrictEqual({
           status: 400,
-          message: 'Invalid request parameters',
-          internalCode: 'bad_request'
+          message: ['First Name should be at least 2 chars long and maximum of 50 chars'],
+          internal_code: 'bad_request'
         });
         dictum.chai(response, 'Test when required parameters are not sent');
       }));
 });
 
 describe('POST /users/sessions', () => {
+  const user = {
+    firstName: 'John',
+    lastName: 'Katzenbach',
+    email: 'john.katz@wolox.co',
+    password: '12345678',
+    confirm_password: '12345678'
+  };
   test('Successful test when sign in', () =>
     controller
       .post('/users')
-      .send({
-        firstName: 'John',
-        lastName: 'Katzenbach',
-        email: 'john.katz@wolox.co',
-        password: '12345678',
-        confirm_password: '12345678'
-      })
+      .send(user)
       .then(() =>
         controller
           .post('/users/sessions')
@@ -122,7 +122,7 @@ describe('POST /users/sessions', () => {
             password: '12345678'
           })
           .then(userSignIn =>
-            jwt.verifyAsync(userSignIn.body.token, config.seed).then(token => ({
+            utils.validateToken(userSignIn.body.token).then(token => ({
               response: userSignIn,
               token
             }))
@@ -134,6 +134,50 @@ describe('POST /users/sessions', () => {
               lastName: 'Katzenbach'
             });
             dictum.chai(response, 'Successful login');
+          })
+      ));
+
+  test('Test when you sign in with an email that does not exist', () =>
+    controller
+      .post('/users')
+      .send(user)
+      .then(() =>
+        controller
+          .post('/users/sessions')
+          .send({
+            email: 'john.katz@wolox.cl',
+            password: '12345678'
+          })
+          .then(response => {
+            const { message, internal_code } = response.body;
+            expect({ status: response.statusCode, message, internal_code }).toStrictEqual({
+              status: 401,
+              message: 'Your email or password is incorrect.',
+              internal_code: 'sign_up_error'
+            });
+            dictum.chai(response, 'Test when you sign in with an email that does not exist');
+          })
+      ));
+
+  test('Test when you sign in with the wrong password', () =>
+    controller
+      .post('/users')
+      .send(user)
+      .then(() =>
+        controller
+          .post('/users/sessions')
+          .send({
+            email: 'john.katz@wolox.co',
+            password: '12345'
+          })
+          .then(response => {
+            const { message, internal_code } = response.body;
+            expect({ status: response.statusCode, message, internal_code }).toStrictEqual({
+              status: 401,
+              message: 'Your email or password is incorrect.',
+              internal_code: 'sign_up_error'
+            });
+            dictum.chai(response, 'Test when you sign in with the wrong password');
           })
       ));
 });
