@@ -28,11 +28,11 @@ exports.validateToken = token =>
     throw errors.verifyTokenError();
   });
 
-exports.mapperUserList = (usersData, limit, page) => {
-  const itemCount = usersData.count;
-  const pageCount = Math.ceil(usersData.count / limit);
+exports.mapperUserList = ({ count, rows }, limit, page) => {
+  const itemCount = count;
+  const pageCount = Math.ceil(count / limit);
   return {
-    users: usersData.rows,
+    users: rows,
     pageCount,
     itemCount,
     page

@@ -1,12 +1,11 @@
-const utils = require('../utils');
+const { passwordEncryption, mapperUserList } = require('../utils');
 const userService = require('../services/users');
 const logger = require('../logger');
 
 exports.createUser = (req, res, next) => {
-  logger.info('createUser method start.');
+  logger.info(`request methods: ${req.method}, endpoint: ${req.path}, createUser method start.`);
   const user = req.body;
-  return utils
-    .passwordEncryption(user)
+  return passwordEncryption(user)
     .then(userService.userRegister)
     .then(response => {
       logger.info(`User ${user.firstName} ${user.lastName} created successfully`);
@@ -19,21 +18,21 @@ exports.createUser = (req, res, next) => {
 };
 
 exports.signInUser = (req, res, next) => {
-  logger.info('SignInUser method start.');
+  logger.info(`request methods: ${req.method}, endpoint: ${req.path}, SignInUser method start.`);
   const { email, password } = req.body;
   return userService
     .signIn({ email }, password)
-    .then(token => res.status(200).send({ token }))
+    .then(token => res.send({ token }))
     .catch(next);
 };
 
 exports.getUserList = (req, res, next) => {
-  logger.info('getUserList method start.');
+  logger.info(`request methods: ${req.method}, endpoint: ${req.path}, getUserList method start.`);
   const { limit, page } = req.query;
   const offset = req.skip;
   return userService
-    .findAllUser(limit, offset)
-    .then(foundUsers => utils.mapperUserList(foundUsers, limit, page))
-    .then(response => res.status(200).send(response))
+    .findAllUsers(limit, offset)
+    .then(foundUsers => mapperUserList(foundUsers, limit, page))
+    .then(response => res.send(response))
     .catch(next);
 };

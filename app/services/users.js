@@ -36,7 +36,7 @@ exports.signIn = (email, password) =>
       throw errors.signInError('Your email or password is incorrect.');
     });
 
-exports.findAllUser = (limit, offset) =>
+exports.findAllUsers = (limit, offset) =>
   User.findAndCountAll({
     limit,
     offset,
