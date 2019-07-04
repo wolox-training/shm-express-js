@@ -1,5 +1,5 @@
 const { User } = require('../models');
-const validations = require('../util');
+const utils = require('../utils');
 
 exports.signUpValidator = {
   firstName: {
@@ -62,7 +62,7 @@ exports.signInValidator = {
 exports.tokenValidator = {
   token: {
     custom: {
-      options: value => validations.validateToken(value).then(response => response),
+      options: value => utils.validateToken(value).then(response => response),
       errorMessage: 'Invalid token'
     }
   }
