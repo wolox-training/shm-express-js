@@ -36,13 +36,8 @@ exports.buyAlbums = (req, res, next) => {
   };
   return albumsService
     .getAlbums(qs)
-    .then(response => {
-      const album = {
-        id: response[0].id,
-        title: response[0].title,
-        userId: user.id
-      };
-      return albumsService.albumRegister(album).then(({ dataValues }) => {
+    .then(response =>
+      albumsService.albumRegister(validations.albumMapper(response[0], user.id)).then(({ dataValues }) => {
         logger.info(`Album ${dataValues.title} successfully purchased`);
         res.status(201).send({
           album: {
@@ -50,7 +45,7 @@ exports.buyAlbums = (req, res, next) => {
             title: dataValues.title
           }
         });
-      });
-    })
+      })
+    )
     .catch(next);
 };

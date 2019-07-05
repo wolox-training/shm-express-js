@@ -31,3 +31,9 @@ exports.validateToken = token =>
   });
 
 exports.decodedToken = token => jwt.decode(token);
+
+exports.albumMapper = ({ id, title }, userId) => ({
+  id,
+  title,
+  userId
+});
