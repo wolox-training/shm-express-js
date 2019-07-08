@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken-promisified');
+const nock = require('nock');
 
 const errors = require('./errors');
 const { session } = require('../config').common;
@@ -37,3 +38,17 @@ exports.albumMapper = ({ id, title }, userId) => ({
   title,
   userId
 });
+
+exports.externalMock = () =>
+  beforeEach(() =>
+    nock('https://jsonplaceholder.typicode.com')
+      .get('/albums')
+      .times(2)
+      .query({ id: '1' })
+      .reply(200, [
+        {
+          id: 1,
+          title: 'quidem molestiae enim'
+        }
+      ])
+  );

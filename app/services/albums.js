@@ -39,3 +39,12 @@ exports.albumRegister = album =>
     }
     throw errors.databaseError('Error processing request in database.');
   });
+
+exports.findAllAlbums = userId =>
+  Album.findAll({
+    where: { userId },
+    attributes: ['id', 'title']
+  }).catch(() => {
+    logger.info(`Error trying to get the user's albums ${userId}`);
+    throw errors.databaseError('Error processing request in database.');
+  });

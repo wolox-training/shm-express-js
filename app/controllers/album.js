@@ -49,3 +49,13 @@ exports.buyAlbums = (req, res, next) => {
     )
     .catch(next);
 };
+
+exports.getAlbumsList = (req, res, next) => {
+  logger.info('getAlbumsList method start.');
+  albumsService
+    .findAllAlbums(req.params.user_id)
+    .then(response => {
+      res.send({ albums: response });
+    })
+    .catch(next);
+};
