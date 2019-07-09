@@ -40,11 +40,22 @@ exports.albumRegister = album =>
     throw errors.databaseError('Error processing request in database.');
   });
 
-exports.findAllAlbums = userId =>
+exports.findAllAlbums = (condition, attributes) =>
   Album.findAll({
-    where: { userId },
-    attributes: ['id', 'title']
+    where: condition,
+    attributes
   }).catch(() => {
-    logger.info(`Error trying to get the user's albums ${userId}`);
+    logger.info('Error trying to get the users albums');
     throw errors.databaseError('Error processing request in database.');
   });
+
+exports.getAlbumPhotos = (id, userId) => {
+  const attributes = ['id'];
+  return exports.findAllAlbums({ id, userId }, attributes).then(response => {
+    if (response.length) {
+      const albumId = response[0].dataValues.id;
+      return exports.getPhotosBy({ albumId }).then(albumsApi => albumsApi.map(({ url }) => url));
+    }
+    return [];
+  });
+};

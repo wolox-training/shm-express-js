@@ -52,10 +52,21 @@ exports.buyAlbums = (req, res, next) => {
 
 exports.getAlbumsList = (req, res, next) => {
   logger.info('getAlbumsList method start.');
+  const attributes = ['id', 'title'];
   albumsService
-    .findAllAlbums(req.params.user_id)
+    .findAllAlbums(req.params, attributes)
     .then(response => {
       res.send({ albums: response });
     })
+    .catch(next);
+};
+
+exports.getAlbumPhotosList = (req, res, next) => {
+  logger.info('getAlbumPhotosList method start.');
+  const user = validations.decodedToken(req.headers.token);
+  const { id } = req.params;
+  return albumsService
+    .getAlbumPhotos(id, user.id)
+    .then(response => res.send({ albumPhotos: response }))
     .catch(next);
 };
