@@ -268,3 +268,32 @@ describe('POST /admin/users', () => {
           })
       ));
 });
+
+describe('POST /users/sessions/invalidate_all', () => {
+  test('Successful test by disabling all sessions of a user', () =>
+    controller
+      .post('/users')
+      .send({
+        firstName: 'John',
+        lastName: 'Katzenbach',
+        email: 'john.katz@wolox.co',
+        password: '12345678',
+        confirm_password: '12345678'
+      })
+      .then(() =>
+        controller
+          .post('/users/sessions')
+          .send({
+            email: 'john.katz@wolox.co',
+            password: '12345678'
+          })
+          .then(({ body }) => controller.post('/users/sessions/invalidate_all').set({ token: body.token }))
+          .then(response => {
+            expect({ status: response.statusCode, message: response.body.message }).toStrictEqual({
+              status: 200,
+              message: 'All sessions have been disabled'
+            });
+            dictum.chai(response, 'All sessions have been disabled');
+          })
+      ));
+});

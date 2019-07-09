@@ -2,16 +2,22 @@ const paginate = require('express-paginate');
 
 const { healthCheck } = require('./controllers/healthCheck');
 const { getAlbums, getPhotos, buyAlbums, getAlbumsList, getAlbumPhotosList } = require('./controllers/album');
-const { createUser, signInUser, getUserList, createAdminUser } = require('../app/controllers/user');
 const { checkValidationSchema } = require('./middlewares/checkSchema');
+const { albumByIdValidator } = require('./schemas/album');
+const { isAdminUser, allowList } = require('./middlewares/sessionValidator');
+const {
+  createUser,
+  signInUser,
+  getUserList,
+  createAdminUser,
+  disableAllSessions
+} = require('../app/controllers/user');
 const {
   signUpValidator,
   signInValidator,
   tokenValidator,
   signUpAdminUserValidator
 } = require('./schemas/user');
-const { albumByIdValidator } = require('./schemas/album');
-const { isAdminUser, allowList } = require('./middlewares/sessionValidator');
 
 exports.init = app => {
   app.get('/health', healthCheck);
@@ -30,4 +36,5 @@ exports.init = app => {
   app.post('/albums/:id', checkValidationSchema(tokenValidator), buyAlbums);
   app.get('/users/:user_id/albums', checkValidationSchema(tokenValidator), allowList, getAlbumsList);
   app.get('/users/albums/:id/photos', checkValidationSchema(tokenValidator), getAlbumPhotosList);
+  app.post('/users/sessions/invalidate_all', checkValidationSchema(tokenValidator), disableAllSessions);
 };

@@ -26,6 +26,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.STRING,
         defaultValue: 'regular'
+      },
+      secret: {
+        allowNull: false,
+        type: DataTypes.STRING,
+        defaultValue: 'wolox-training'
       }
     },
     {

@@ -21,13 +21,13 @@ exports.passwordDecryption = (password, hash) =>
     throw errors.decryptionError();
   });
 
-exports.generateToken = ({ id, firstName, lastName, email, role }) =>
-  jwt.signAsync({ id, firstName, lastName, email, role }, session.seed).catch(() => {
+exports.generateToken = ({ id, firstName, lastName, email, role, secret }) =>
+  jwt.signAsync({ id, firstName, lastName, email, role }, secret).catch(() => {
     throw errors.generateTokenError();
   });
 
-exports.validateToken = token =>
-  jwt.verifyAsync(token, session.seed).catch(() => {
+exports.validateToken = (token, secret) =>
+  jwt.verifyAsync(token, secret).catch(() => {
     throw errors.verifyTokenError();
   });
 
@@ -75,3 +75,8 @@ exports.externalMockPhotos = () =>
         }
       ])
   );
+
+exports.generateSecret = () =>
+  Math.random()
+    .toString(36)
+    .replace('0.', '');

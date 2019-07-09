@@ -1,5 +1,6 @@
 const { User } = require('../models');
 const validations = require('../util');
+const { findUserSecret } = require('../services/users');
 
 exports.signUpValidator = {
   firstName: {
@@ -62,7 +63,12 @@ exports.signInValidator = {
 exports.tokenValidator = {
   token: {
     custom: {
-      options: value => validations.validateToken(value).then(response => response),
+      options: value => {
+        const { id } = validations.decodedToken(value);
+        return findUserSecret(id).then(({ secret }) =>
+          validations.validateToken(value, secret).then(response => response)
+        );
+      },
       errorMessage: 'Invalid token'
     }
   }

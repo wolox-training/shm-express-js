@@ -1,6 +1,7 @@
 const { User } = require('../models');
 const errors = require('../errors');
 const logger = require('../logger');
+const { generateSecret } = require('../util');
 
 exports.userRegister = user =>
   User.create(user).catch(() => {
@@ -12,7 +13,7 @@ exports.findUser = email =>
   User.findOne({
     where: { email },
     raw: true,
-    attributes: ['id', 'firstName', 'lastName', 'email', 'password', 'role']
+    attributes: ['id', 'firstName', 'lastName', 'email', 'password', 'role', 'secret']
   }).catch(err => {
     logger.info('Error trying to find the user');
     throw errors.databaseError(`${err}`);
@@ -47,3 +48,28 @@ exports.changeRole = email =>
     logger.info('Error trying to update the user');
     throw errors.databaseError('Error processing request in database.');
   });
+
+exports.findUserSecret = id =>
+  User.findOne({
+    where: { id },
+    attributes: ['secret'],
+    raw: true
+  }).catch(err => {
+    logger.info('Error trying to find the user');
+    throw errors.databaseError(`${err}`);
+  });
+
+exports.updateSecret = email => {
+  const secret = generateSecret();
+  return User.update(
+    { secret },
+    {
+      where: { email },
+      raw: true,
+      returning: true
+    }
+  ).catch(() => {
+    logger.info('Error trying to update the user');
+    throw errors.databaseError('Error processing request in database.');
+  });
+};
