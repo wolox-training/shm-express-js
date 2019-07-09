@@ -41,7 +41,7 @@ exports.findAllUsers = (limit, offset) =>
     limit,
     offset,
     attributes: ['id', 'firstName', 'lastName', 'email']
-  }).catch(err => {
+  }).catch(() => {
     logger.info('Error trying to find the users');
-    throw errors.databaseError(`${err}`);
+    throw errors.databaseError('Error processing request in database.');
   });
