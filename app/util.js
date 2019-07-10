@@ -3,11 +3,11 @@ const jwt = require('jsonwebtoken-promisified');
 const nock = require('nock');
 
 const errors = require('./errors');
-const { session } = require('../config').common;
+const { salt_rounds, expiresIn } = require('../config').common.session;
 
 exports.passwordEncryption = user =>
   bcrypt
-    .hash(user.password, session.salt_rounds)
+    .hash(user.password, salt_rounds)
     .then(password => ({
       ...user,
       password
@@ -22,7 +22,7 @@ exports.passwordDecryption = (password, hash) =>
   });
 
 exports.generateToken = ({ id, firstName, lastName, email, role, secret }) =>
-  jwt.signAsync({ id, firstName, lastName, email, role }, secret).catch(() => {
+  jwt.signAsync({ id, firstName, lastName, email, role }, secret, { expiresIn }).catch(() => {
     throw errors.generateTokenError();
   });
 

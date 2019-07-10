@@ -2,6 +2,7 @@ const validations = require('../util');
 const { userRegister, findUser, findAllUser, changeRole, updateSecret } = require('../services/users');
 const logger = require('../logger');
 const errors = require('../errors');
+const { expiresIn } = require('../../config').common.session;
 
 exports.createUser = (req, res, next) => {
   logger.info('createUser method start.');
@@ -33,7 +34,7 @@ exports.signInUser = (req, res, next) => {
     })
     .then(token =>
       token
-        ? res.status(200).send({ token })
+        ? res.status(200).send({ token, Message: `Your token will expire at ${expiresIn}` })
         : res.status(401).send(errors.signUpError('Your email or password is incorrect.'))
     )
     .catch(next);
