@@ -7,9 +7,7 @@ exports.tokenValidator = (req, res, next) => {
     return utils
       .validateToken(token)
       .then(() => next())
-      .catch(error => {
-        next(errors.sessionError(`Session error, ${error.message}`));
-      });
+      .catch(error => next(errors.sessionError(`Session error, ${error.message}`)));
   }
   return next(errors.sessionError('Session error, the token has not been provided'));
 };
