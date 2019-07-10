@@ -153,7 +153,7 @@ describe('POST /users/sessions', () => {
             expect({ status: response.statusCode, message, internal_code }).toStrictEqual({
               status: 401,
               message: 'Your email or password is incorrect.',
-              internal_code: 'sign_up_error'
+              internal_code: 'session_error'
             });
             dictum.chai(response, 'Test when you sign in with an email that does not exist');
           })
@@ -175,7 +175,7 @@ describe('POST /users/sessions', () => {
             expect({ status: response.statusCode, message, internal_code }).toStrictEqual({
               status: 401,
               message: 'Your email or password is incorrect.',
-              internal_code: 'sign_up_error'
+              internal_code: 'session_error'
             });
             dictum.chai(response, 'Test when you sign in with the wrong password');
           })

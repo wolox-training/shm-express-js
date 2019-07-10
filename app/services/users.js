@@ -27,13 +27,13 @@ exports.signIn = (email, password) =>
           .passwordDecryption(password, foundUser.password)
           .then(registered => (registered ? utils.generateToken(foundUser) : null));
       }
-      throw errors.signInError('Your email or password is incorrect.');
+      throw errors.sessionError('Your email or password is incorrect.');
     })
     .then(token => {
       if (token) {
         return token;
       }
-      throw errors.signInError('Your email or password is incorrect.');
+      throw errors.sessionError('Your email or password is incorrect.');
     });
 
 exports.findAllUsers = (limit, offset) =>

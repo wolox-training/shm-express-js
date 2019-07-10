@@ -15,11 +15,9 @@ exports.PASSWORD_ENCRYPTION_ERROR = 'password_encryption_error.';
 
 exports.PASSWORD_DECRYPTION_ERROR = 'password_decryption_error.';
 
-exports.SIGN_IN_ERROR = 'sign_up_error';
+exports.SESSION_ERROR = 'session_error';
 
 exports.GENERATE_TOKEN_ERROR = 'generate_token_error.';
-
-exports.VERIFY_TOKEN_ERROR = 'verify_token_error.';
 
 exports.databaseError = message => internalError(message, exports.DATABASE_ERROR);
 
@@ -35,10 +33,7 @@ exports.encryptionError = () =>
 exports.decryptionError = () =>
   internalError('Error trying to decrypt the password.', exports.PASSWORD_DECRYPTION_ERROR);
 
-exports.signInError = message => internalError(message, exports.SIGN_IN_ERROR);
+exports.sessionError = message => internalError(message, exports.SESSION_ERROR);
 
 exports.generateTokenError = () =>
   internalError('Error trying to generate the token.', exports.GENERATE_TOKEN_ERROR);
-
-exports.verifyTokenError = () =>
-  internalError('Error trying to verify the token.', exports.VERIFY_TOKEN_ERROR);

@@ -23,10 +23,7 @@ exports.generateToken = ({ id, firstName, lastName, email }) =>
     throw errors.generateTokenError();
   });
 
-exports.validateToken = token =>
-  jwt.verifyAsync(token, session.secret).catch(() => {
-    throw errors.verifyTokenError();
-  });
+exports.validateToken = token => jwt.verifyAsync(token, session.secret);
 
 exports.mapperUserList = ({ count, rows }, limit, page) => {
   const itemCount = count;
