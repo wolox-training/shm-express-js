@@ -12,8 +12,7 @@ module.exports = {
           password: '$2b$10$9.dvahVb5lgcsaRtVlttCOPr6JHbXI.nmDfWNGHhIt39Mev/gDa0u',
           role: 'admin',
           created_at: new Date(),
-          updated_at: new Date(),
-          deleted_at: new Date()
+          updated_at: new Date()
         }
       ],
       {}

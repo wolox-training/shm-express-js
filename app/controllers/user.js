@@ -1,6 +1,7 @@
 const { passwordEncryption, mapperUserList } = require('../utils');
 const { userRegister, signIn, findAllUsers, changeRole } = require('../services/users');
 const logger = require('../logger');
+const { ADMIN_ROLE } = require('../constants');
 
 exports.createUser = (req, res, next) => {
   const user = req.body;
@@ -47,11 +48,11 @@ exports.createAdminUser = (req, res, next) => {
   const user = req.body;
   logger.info(`createAdminUser method start, request methods: ${req.method}, endpoint: ${req.path},
   user: ${user.firstName} ${user.lastName}`);
-  req.body.role = 'admin';
+  req.body.role = ADMIN_ROLE;
   return changeRole(req.body.email)
-    .then(updated =>
-      updated[0]
-        ? res.status(201).send({ message: `User ${updated[1][0].firstName} updated to admin` })
+    .then(([AffectedColumns]) =>
+      AffectedColumns
+        ? res.status(201).send({ message: `User ${user.email} updated to admin` })
         : exports.createUser(req, res, next)
     )
     .catch(next);

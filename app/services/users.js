@@ -2,10 +2,14 @@ const { User } = require('../models');
 const errors = require('../errors');
 const logger = require('../logger');
 const utils = require('../utils');
+const { ADMIN_ROLE, REGULAR_ROLE } = require('../constants');
 
 exports.userRegister = user =>
-  User.create(user).catch(() => {
+  User.create(user).catch(error => {
     logger.info(`Error trying to create the user ${user.firstName} ${user.lastName}`);
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      throw errors.badRequest('The email is already registered for an admin user.');
+    }
     throw errors.databaseError('Error processing request in database.');
   });
 
@@ -48,11 +52,9 @@ exports.findAllUsers = (limit, offset) =>
 
 exports.changeRole = email =>
   User.update(
-    { role: 'admin' },
+    { role: ADMIN_ROLE },
     {
-      where: { email },
-      raw: true,
-      returning: true
+      where: { email, role: REGULAR_ROLE }
     }
   ).catch(() => {
     logger.info('Error trying to update the user');

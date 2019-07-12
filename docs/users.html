@@ -8,7 +8,7 @@
   "content-type": "application/json",
   "content-length": 52
 }</pre><h5>Body</h5><pre>{
-  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoiSm9obiIsImxhc3ROYW1lIjoiS2F0emVuYmFjaCIsImVtYWlsIjoiam9obi5rYXR6QHdvbG94LmNvIiwicm9sZSI6InJlZ3VsYXIiLCJpYXQiOjE1NjI5NTM4Mjd9.YtuXMz-jVXxE-JhGrcCUR0VB8JcxCK1k2k2xexRdl8A"
+  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoiSm9obiIsImxhc3ROYW1lIjoiS2F0emVuYmFjaCIsImVtYWlsIjoiam9obi5rYXR6QHdvbG94LmNvIiwicm9sZSI6InJlZ3VsYXIiLCJpYXQiOjE1NjI5NzA3NzZ9.BdNEM4Apx0T045zrmkArNUOm6BnMrDaBL2JYsrqw6Cw"
 }</pre></div></div></div></div><div class="panel panel-default"><div class="panel-heading" role="tab" id="heading-users-sessions-POST"><h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="collapse-users-sessions-POST" href="#collapse-users-sessions-POST">POST /users/sessions</a></h4></div><div id="collapse-users-sessions-POST" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-users-sessions-POST"><div class="panel-body"><h4>Request Data</h4><div class="container"><h5>Headers</h5><pre>{
   "content-type": "application/json",
   "content-length": 52
@@ -33,23 +33,6 @@
 }</pre><h5>Body</h5><pre>{
   "message": "Your email or password is incorrect.",
   "internal_code": "session_error"
-}</pre></div></div></div></div><div class="panel panel-default"><div class="panel-heading" role="tab" id="heading-users-GET"><h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="collapse-users-GET" href="#collapse-users-GET">GET /users</a></h4></div><div id="collapse-users-GET" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-users-GET"><div class="panel-body"><h4>Request Data</h4><div class="container"><h5>Headers</h5><pre>{
-  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoiSm9obiIsImxhc3ROYW1lIjoiS2F0emVuYmFjaCIsImVtYWlsIjoiam9obi5rYXR6QHdvbG94LmNvIiwicm9sZSI6InJlZ3VsYXIiLCJpYXQiOjE1NjI5NTM4Mjd9.YtuXMz-jVXxE-JhGrcCUR0VB8JcxCK1k2k2xexRdl8A"
-}</pre></div></div><div class="panel-body"><h4>Response Data</h4><div class="container"><h5>Status: 200</h5><h5>Headers</h5><pre>{
-  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoiSm9obiIsImxhc3ROYW1lIjoiS2F0emVuYmFjaCIsImVtYWlsIjoiam9obi5rYXR6QHdvbG94LmNvIiwicm9sZSI6InJlZ3VsYXIiLCJpYXQiOjE1NjI5NTM4Mjd9.YtuXMz-jVXxE-JhGrcCUR0VB8JcxCK1k2k2xexRdl8A"
-}</pre><h5>Body</h5><pre>{
-  "users": [
-    {
-      "id": 1,
-      "firstName": "John",
-      "lastName": "Katzenbach",
-      "email": "john.katz@wolox.co",
-      "role": "regular"
-    }
-  ],
-  "pageCount": 1,
-  "itemCount": 1,
-  "page": 1
 }</pre></div></div></div></div><div class="panel panel-default"><div class="panel-heading" role="tab" id="heading-users-POST"><h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="collapse-users-POST" href="#collapse-users-POST">POST /users</a></h4></div><div id="collapse-users-POST" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-users-POST"><div class="panel-body"><h4>Request Data</h4><div class="container"><h5>Headers</h5><pre>{
   "content-type": "application/json",
   "content-length": 125
@@ -115,4 +98,21 @@
     "First Name should be at least 2 chars long and maximum of 50 chars"
   ],
   "internal_code": "bad_request"
+}</pre></div></div></div></div><div class="panel panel-default"><div class="panel-heading" role="tab" id="heading-users-GET"><h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="collapse-users-GET" href="#collapse-users-GET">GET /users</a></h4></div><div id="collapse-users-GET" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-users-GET"><div class="panel-body"><h4>Request Data</h4><div class="container"><h5>Headers</h5><pre>{
+  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoiSm9obiIsImxhc3ROYW1lIjoiS2F0emVuYmFjaCIsImVtYWlsIjoiam9obi5rYXR6QHdvbG94LmNvIiwicm9sZSI6InJlZ3VsYXIiLCJpYXQiOjE1NjI5NzA3NzZ9.BdNEM4Apx0T045zrmkArNUOm6BnMrDaBL2JYsrqw6Cw"
+}</pre></div></div><div class="panel-body"><h4>Response Data</h4><div class="container"><h5>Status: 200</h5><h5>Headers</h5><pre>{
+  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoiSm9obiIsImxhc3ROYW1lIjoiS2F0emVuYmFjaCIsImVtYWlsIjoiam9obi5rYXR6QHdvbG94LmNvIiwicm9sZSI6InJlZ3VsYXIiLCJpYXQiOjE1NjI5NzA3NzZ9.BdNEM4Apx0T045zrmkArNUOm6BnMrDaBL2JYsrqw6Cw"
+}</pre><h5>Body</h5><pre>{
+  "users": [
+    {
+      "id": 1,
+      "firstName": "John",
+      "lastName": "Katzenbach",
+      "email": "john.katz@wolox.co",
+      "role": "regular"
+    }
+  ],
+  "pageCount": 1,
+  "itemCount": 1,
+  "page": 1
 }</pre></div></div></div></div></div></body></html>

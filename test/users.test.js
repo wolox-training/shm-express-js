@@ -14,6 +14,14 @@ const user = {
   confirm_password: '12345678'
 };
 
+const adminUser = {
+  firstName: 'John',
+  lastName: 'Katzenbach',
+  email: 'john.katz@wolox.co',
+  password: '$2b$10$YTRfEXPTYpumz.rYGhF19e0mR.iSztN5lWfGo3nIJkP5GpyCwG/Kq',
+  role: 'admin'
+};
+
 const signIn = () => controller.post('/users').send(user);
 
 describe('POST /users', () => {
@@ -99,5 +107,106 @@ describe('POST /users', () => {
           internal_code: 'bad_request'
         });
         dictum.chai(response, 'Test when required parameters are not sent');
+      }));
+});
+
+describe('GET /users', () => {
+  test('Successful test to get list of users', () =>
+    signIn().then(() =>
+      controller
+        .post('/users/sessions')
+        .send({
+          email: 'john.katz@wolox.co',
+          password: '12345678'
+        })
+        .then(({ body }) => controller.get('/users').set({ token: body.token }))
+        .then(response => {
+          expect(response.body).toStrictEqual({
+            users: [
+              {
+                id: 1,
+                firstName: 'John',
+                lastName: 'Katzenbach',
+                email: 'john.katz@wolox.co',
+                role: 'regular'
+              }
+            ],
+            pageCount: 1,
+            itemCount: 1,
+            page: 1
+          });
+          dictum.chai(response, 'Test get user list');
+        })
+    ));
+});
+
+describe('POST /admin/users', () => {
+  test('Successful test when registering admin user', () =>
+    User.create(adminUser)
+      .then(() =>
+        controller.post('/users/sessions').send({
+          email: 'john.katz@wolox.co',
+          password: '12345678'
+        })
+      )
+      .then(({ body }) =>
+        controller
+          .post('/admin/users')
+          .set({ token: body.token })
+          .send({
+            firstName: 'Jose',
+            lastName: 'Perez',
+            email: 'jose.perez@wolox.com.ar',
+            password: '12345test'
+          })
+      )
+      .then(response => {
+        User.findOne({
+          where: { email: 'jose.perez@wolox.com.ar' }
+        }).then(({ firstName, lastName, email, role }) => {
+          expect({ firstName, lastName, email, role }).toStrictEqual({
+            firstName: 'Jose',
+            lastName: 'Perez',
+            email: 'jose.perez@wolox.com.ar',
+            role: 'admin'
+          });
+          dictum.chai(response, 'Successful test creating admin user');
+        });
+      }));
+
+  test('Successful test when updating regular user to administrator', () =>
+    User.create(adminUser)
+      .then(() =>
+        controller.post('/users').send({
+          firstName: 'Jose',
+          lastName: 'Perez',
+          email: 'jose.perez@wolox.com.ar',
+          password: '12345678',
+          confirm_password: '12345678'
+        })
+      )
+      .then(() =>
+        controller.post('/users/sessions').send({
+          email: 'john.katz@wolox.co',
+          password: '12345678'
+        })
+      )
+      .then(({ body }) =>
+        controller
+          .post('/admin/users')
+          .set({ token: body.token })
+          .send({
+            firstName: 'Jose',
+            lastName: 'Perez',
+            email: 'jose.perez@wolox.com.ar',
+            password: '12345678'
+          })
+      )
+      .then(response => {
+        expect({ status: response.statusCode, message: response.body.message }).toStrictEqual({
+          status: 201,
+          message: 'User jose.perez@wolox.com.ar updated to admin'
+        });
+        dictum.chai(response, 'Successful test updating regular user to administrator');
       }));
 });

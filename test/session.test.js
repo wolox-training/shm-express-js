@@ -79,33 +79,3 @@ describe('POST /users/sessions', () => {
         })
     ));
 });
-
-describe('GET /users', () => {
-  test('Successful test to get list of users', () =>
-    signIn().then(() =>
-      controller
-        .post('/users/sessions')
-        .send({
-          email: 'john.katz@wolox.co',
-          password: '12345678'
-        })
-        .then(({ body }) => controller.get('/users').set({ token: body.token }))
-        .then(response => {
-          expect(response.body).toStrictEqual({
-            users: [
-              {
-                id: 1,
-                firstName: 'John',
-                lastName: 'Katzenbach',
-                email: 'john.katz@wolox.co',
-                role: 'regular'
-              }
-            ],
-            pageCount: 1,
-            itemCount: 1,
-            page: 1
-          });
-          dictum.chai(response, 'Test get user list');
-        })
-    ));
-});
