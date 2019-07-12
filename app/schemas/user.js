@@ -1,5 +1,4 @@
 const { User } = require('../models');
-const validations = require('../util');
 
 exports.signUpValidator = {
   firstName: {
@@ -55,15 +54,6 @@ exports.signInValidator = {
     matches: {
       errorMessage: 'The email does not belong to the Wolox domains',
       options: [/^[a-z0-9._-]+@wolox.(co|cl|com|ar|com.ar)+$/i]
-    }
-  }
-};
-
-exports.tokenValidator = {
-  token: {
-    custom: {
-      options: value => validations.validateToken(value).then(response => response),
-      errorMessage: 'Invalid token'
     }
   }
 };

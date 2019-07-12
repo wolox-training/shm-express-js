@@ -1,14 +1,15 @@
-const validations = require('../util');
-const userService = require('../services/users');
+const { passwordEncryption, mapperUserList } = require('../utils');
+const { userRegister, signIn, findAllUsers, changeRole } = require('../services/users');
 const logger = require('../logger');
-const errors = require('../errors');
 
 exports.createUser = (req, res, next) => {
-  logger.info('createUser method start.');
   const user = req.body;
-  return validations
-    .passwordEncryption(user)
-    .then(userService.userRegister)
+  logger.info(
+    `CreateUser method start, request methods: ${req.method}, endpoint: ${req.path}, 
+    user: ${user.firstName} ${user.lastName}`
+  );
+  return passwordEncryption(user)
+    .then(userRegister)
     .then(response => {
       logger.info(`User ${user.firstName} ${user.lastName} created successfully`);
       return res.status(201).send({
@@ -20,50 +21,34 @@ exports.createUser = (req, res, next) => {
 };
 
 exports.signInUser = (req, res, next) => {
-  logger.info('SignInUser method start.');
   const { email, password } = req.body;
-  return userService
-    .findUser(email)
-    .then(foundUser => {
-      if (foundUser) {
-        return validations
-          .passwordDecryption(password, foundUser.password)
-          .then(registered => (registered ? validations.generateToken(foundUser) : null));
-      }
-      return null;
-    })
-    .then(token =>
-      token
-        ? res.status(200).send({ token })
-        : res.status(401).send(errors.signUpError('Your email or password is incorrect.'))
-    )
+  logger.info(
+    `SignInUser method start, request methods: ${req.method}, endpoint: ${req.path}, email: ${email}`
+  );
+  return signIn({ email }, password)
+    .then(token => res.send({ token }))
     .catch(next);
 };
 
-exports.getUserList = (req, res, next) => {
-  logger.info('getUserList method start.');
+exports.getUsersList = (req, res, next) => {
+  const { token } = req.headers;
+  logger.info(
+    `getUserList method start, request methods: ${req.method}, endpoint: ${req.path}, token: ${token}`
+  );
   const { limit, page } = req.query;
   const offset = req.skip;
-  return userService
-    .findAllUser(limit, offset)
-    .then(response => {
-      const itemCount = response.count;
-      const pageCount = Math.ceil(response.count / limit);
-      res.status(200).send({
-        users: response.rows,
-        pageCount,
-        itemCount,
-        page
-      });
-    })
+  return findAllUsers(limit, offset)
+    .then(foundUsers => mapperUserList(foundUsers, limit, page))
+    .then(response => res.send(response))
     .catch(next);
 };
 
 exports.createAdminUser = (req, res, next) => {
-  logger.info('createAdminUser method start.');
+  const user = req.body;
+  logger.info(`createAdminUser method start, request methods: ${req.method}, endpoint: ${req.path},
+  user: ${user.firstName} ${user.lastName}`);
   req.body.role = 'admin';
-  return userService
-    .changeRole(req.body.email)
+  return changeRole(req.body.email)
     .then(updated =>
       updated[0]
         ? res.status(201).send({ message: `User ${updated[1][0].firstName} updated to admin` })
