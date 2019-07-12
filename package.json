@@ -59,6 +59,7 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
+    "express-paginate": "^1.0.0",
     "express-validator": "^5.3.1",
     "jsonwebtoken-promisified": "^1.0.3",
     "jwt-simple": "^0.5.1",

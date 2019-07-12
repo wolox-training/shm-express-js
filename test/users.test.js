@@ -153,7 +153,7 @@ describe('POST /users/sessions', () => {
             expect({ status: response.statusCode, message, internal_code }).toStrictEqual({
               status: 401,
               message: 'Your email or password is incorrect.',
-              internal_code: 'sign_up_error'
+              internal_code: 'session_error'
             });
             dictum.chai(response, 'Test when you sign in with an email that does not exist');
           })
@@ -175,9 +175,47 @@ describe('POST /users/sessions', () => {
             expect({ status: response.statusCode, message, internal_code }).toStrictEqual({
               status: 401,
               message: 'Your email or password is incorrect.',
-              internal_code: 'sign_up_error'
+              internal_code: 'session_error'
             });
             dictum.chai(response, 'Test when you sign in with the wrong password');
+          })
+      ));
+});
+
+describe('GET /users', () => {
+  test('Successful test to get list of users', () =>
+    controller
+      .post('/users')
+      .send({
+        firstName: 'John',
+        lastName: 'Katzenbach',
+        email: 'john.katz@wolox.co',
+        password: '12345678',
+        confirm_password: '12345678'
+      })
+      .then(() =>
+        controller
+          .post('/users/sessions')
+          .send({
+            email: 'john.katz@wolox.co',
+            password: '12345678'
+          })
+          .then(({ body }) => controller.get('/users').set({ token: body.token }))
+          .then(response => {
+            expect(response.body).toStrictEqual({
+              users: [
+                {
+                  id: 1,
+                  firstName: 'John',
+                  lastName: 'Katzenbach',
+                  email: 'john.katz@wolox.co'
+                }
+              ],
+              pageCount: 1,
+              itemCount: 1,
+              page: 1
+            });
+            dictum.chai(response, 'Test get user list');
           })
       ));
 });
