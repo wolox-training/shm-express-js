@@ -1,4 +1,4 @@
-const { decodedToken } = require('../util');
+const { decodedToken } = require('../utils');
 const errors = require('../errors');
 
 exports.isAdminUser = (req, res, next) => {
