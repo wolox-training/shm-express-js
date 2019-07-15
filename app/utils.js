@@ -25,6 +25,8 @@ exports.generateToken = ({ id, firstName, lastName, email, role }) =>
 
 exports.validateToken = token => jwt.verifyAsync(token, session.secret);
 
+exports.decodedToken = token => jwt.decode(token);
+
 exports.mapperUserList = ({ count, rows }, limit, page) => {
   const itemCount = count;
   const pageCount = Math.ceil(count / limit);
