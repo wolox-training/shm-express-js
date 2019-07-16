@@ -63,7 +63,7 @@ describe('POST /users', () => {
             const { message, internal_code } = response.body;
             expect({ status: response.statusCode, message, internal_code }).toStrictEqual({
               status: 400,
-              message: ['The email is already registered'],
+              message: 'The email is already registered.',
               internal_code: 'bad_request'
             });
             dictum.chai(response, 'Successful test trying to create an user with an email in use.');

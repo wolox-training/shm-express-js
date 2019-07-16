@@ -1,4 +1,4 @@
-const { passwordEncryption, mapperUserList } = require('../utils');
+const { mapperUserList } = require('../utils');
 const { userRegister, signIn, findAllUsers, changeRole } = require('../services/users');
 const logger = require('../logger');
 const { ADMIN_ROLE } = require('../constants');
@@ -9,13 +9,12 @@ exports.createUser = (req, res, next) => {
     `CreateUser method start, request methods: ${req.method}, endpoint: ${req.path}, 
     user: ${user.firstName} ${user.lastName}`
   );
-  return passwordEncryption(user)
-    .then(userRegister)
-    .then(response => {
-      logger.info(`User ${user.firstName} ${user.lastName} created successfully`);
+  return userRegister(user)
+    .then(({ firstName, lastName }) => {
+      logger.info(`User ${firstName} ${lastName} created successfully`);
       return res.status(201).send({
-        firstName: response.firstName,
-        lastName: response.lastName
+        firstName,
+        lastName
       });
     })
     .catch(next);
@@ -48,12 +47,19 @@ exports.createAdminUser = (req, res, next) => {
   const user = req.body;
   logger.info(`createAdminUser method start, request methods: ${req.method}, endpoint: ${req.path},
   user: ${user.firstName} ${user.lastName}`);
-  req.body.role = ADMIN_ROLE;
-  return changeRole(req.body.email)
-    .then(([AffectedColumns]) =>
-      AffectedColumns
-        ? res.status(201).send({ message: `User ${user.email} updated to admin` })
-        : exports.createUser(req, res, next)
-    )
+  user.role = ADMIN_ROLE;
+  return changeRole(user.email)
+    .then(([affectedColumns]) => {
+      if (affectedColumns) {
+        return res.status(201).send({ message: `User ${user.email} updated to admin` });
+      }
+      return userRegister(user).then(({ firstName, lastName }) => {
+        logger.info(`Admin user ${firstName} ${lastName} created successfully`);
+        res.status(201).send({
+          firstName,
+          lastName
+        });
+      });
+    })
     .catch(next);
 };

@@ -4,7 +4,7 @@ const { healthCheck } = require('./controllers/healthCheck');
 const { getAlbums, getPhotos } = require('./controllers/album');
 const { createUser, signInUser, getUsersList, createAdminUser } = require('../app/controllers/user');
 const { checkValidationSchema } = require('./middlewares/checkSchema');
-const { signUpValidator, signInValidator, signUpAdminUserValidator } = require('./schemas/user');
+const { signUpValidator, signInValidator } = require('./schemas/user');
 const { albumByIdValidator } = require('./schemas/album');
 const { isAdminUser } = require('./middlewares/sessionValidator');
 const { tokenValidator } = require('./middlewares/session');
@@ -19,7 +19,7 @@ exports.init = app => {
   app.post(
     '/admin/users',
     tokenValidator,
-    checkValidationSchema(signUpAdminUserValidator),
+    checkValidationSchema(signUpValidator),
     isAdminUser,
     createAdminUser
   );
