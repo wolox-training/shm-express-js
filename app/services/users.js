@@ -1,9 +1,7 @@
 const { User } = require('../models');
 const errors = require('../errors');
 const logger = require('../logger');
-const utils = require('../utils');
-const { passwordEncryption } = require('../utils');
-const { ADMIN_ROLE, REGULAR_ROLE } = require('../constants');
+const { passwordEncryption, passwordDecryption, generateToken } = require('../utils');
 
 exports.userRegister = user =>
   exports
@@ -14,13 +12,13 @@ exports.userRegister = user =>
       }
       return passwordEncryption(user);
     })
-    .then(response =>
-      User.create(response).catch(() => {
+    .then(userToCreate =>
+      User.create(userToCreate).catch(() => {
         throw errors.databaseError('Error processing request in database.');
       })
     )
     .catch(error => {
-      logger.info(`Error trying to create the user ${user.firstName} ${user.lastName}`);
+      logger.error(`Error trying to create the user ${user.firstName} ${user.lastName}`);
       throw error;
     });
 
@@ -29,7 +27,7 @@ exports.findUserBy = option =>
     where: option,
     attributes: ['id', 'firstName', 'lastName', 'email', 'password', 'role']
   }).catch(() => {
-    logger.info('Error trying to find the user');
+    logger.error('Error trying to find the user');
     throw errors.databaseError('Error processing request in database.');
   });
 
@@ -38,9 +36,9 @@ exports.signIn = (email, password) =>
     .findUserBy(email)
     .then(foundUser => {
       if (foundUser) {
-        return utils
-          .passwordDecryption(password, foundUser.password)
-          .then(registered => (registered ? utils.generateToken(foundUser) : null));
+        return passwordDecryption(password, foundUser.password).then(registered =>
+          registered ? generateToken(foundUser) : null
+        );
       }
       throw errors.sessionError('Your email or password is incorrect.');
     })
@@ -57,17 +55,17 @@ exports.findAllUsers = (limit, offset) =>
     offset,
     attributes: ['id', 'firstName', 'lastName', 'email', 'role']
   }).catch(() => {
-    logger.info('Error trying to find the users');
+    logger.error('Error trying to find the users');
     throw errors.databaseError('Error processing request in database.');
   });
 
-exports.changeRole = email =>
+exports.changeRole = (role, email) =>
   User.update(
-    { role: ADMIN_ROLE },
+    { role },
     {
-      where: { email, role: REGULAR_ROLE }
+      where: { email }
     }
   ).catch(() => {
-    logger.info('Error trying to update the user');
+    logger.error('Error trying to update the user');
     throw errors.databaseError('Error processing request in database.');
   });

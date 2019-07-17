@@ -1,7 +1,8 @@
 const { mapperUserList } = require('../utils');
-const { userRegister, signIn, findAllUsers, changeRole } = require('../services/users');
+const { userRegister, signIn, findAllUsers, changeRole, findUserBy } = require('../services/users');
 const logger = require('../logger');
-const { ADMIN_ROLE } = require('../constants');
+const { ADMIN_ROLE, REGULAR_ROLE } = require('../constants');
+const errors = require('../errors');
 
 exports.createUser = (req, res, next) => {
   const user = req.body;
@@ -45,13 +46,19 @@ exports.getUsersList = (req, res, next) => {
 
 exports.createAdminUser = (req, res, next) => {
   const user = req.body;
+  const { email } = user;
+  user.role = ADMIN_ROLE;
   logger.info(`createAdminUser method start, request methods: ${req.method}, endpoint: ${req.path},
   user: ${user.firstName} ${user.lastName}`);
-  user.role = ADMIN_ROLE;
-  return changeRole(user.email)
-    .then(([affectedColumns]) => {
-      if (affectedColumns) {
-        return res.status(201).send({ message: `User ${user.email} updated to admin` });
+  findUserBy({ email })
+    .then(foundUser => {
+      if (foundUser) {
+        if (foundUser.role === REGULAR_ROLE) {
+          return changeRole(ADMIN_ROLE, email).then(() =>
+            res.status(201).send({ message: `User ${email} updated to admin` })
+          );
+        }
+        return next(errors.badRequest('The email is already registered for admin user.'));
       }
       return userRegister(user).then(({ firstName, lastName }) => {
         logger.info(`Admin user ${firstName} ${lastName} created successfully`);
