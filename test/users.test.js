@@ -81,8 +81,8 @@ describe('POST /users', () => {
         confirm_password: '123'
       })
       .then(response => {
-        const { message, internalCode } = response.body;
-        expect({ status: response.statusCode, message, internalCode }).toStrictEqual({
+        const { message, internal_code } = response.body;
+        expect({ status: response.statusCode, message, internal_code }).toStrictEqual({
           status: 400,
           message: ['Password should be at least 8 chars long'],
           internal_code: 'bad_request'
