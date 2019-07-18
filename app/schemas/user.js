@@ -1,5 +1,3 @@
-const { User } = require('../models');
-
 exports.signUpValidator = {
   firstName: {
     isLength: {
@@ -19,10 +17,6 @@ exports.signUpValidator = {
     errorMessage: 'Please enter a valid email address',
     isEmail: true,
     trim: true,
-    custom: {
-      options: value => User.findOne({ where: { email: value } }).then(response => !response),
-      errorMessage: 'The email is already registered'
-    },
     matches: {
       errorMessage: 'The email does not belong to the Wolox domains',
       options: [/^[a-z0-9._-]+@wolox.(co|cl|com|ar|com.ar)+$/i]
@@ -36,12 +30,6 @@ exports.signUpValidator = {
     matches: {
       options: [/^([a-z0-9])+$/i],
       errorMessage: 'The password must be alphanumeric'
-    }
-  },
-  confirm_password: {
-    errorMessage: 'Must have the same value as the password field',
-    custom: {
-      options: (value, { req }) => value === req.body.password
     }
   }
 };

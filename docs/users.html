@@ -1,4 +1,39 @@
-<html><head><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" /><script src="https://code.jquery.com/jquery-1.12.2.min.js"></script><script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script><style> pre { width: 95%; } </style></head><body><div class="container"><div class="jumbotron"><h1>Users</h1></div><div class="panel panel-default"><div class="panel-heading" role="tab" id="heading-users-POST"><h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="collapse-users-POST" href="#collapse-users-POST">POST /users</a></h4></div><div id="collapse-users-POST" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-users-POST"><div class="panel-body"><h4>Request Data</h4><div class="container"><h5>Headers</h5><pre>{
+<html><head><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" /><script src="https://code.jquery.com/jquery-1.12.2.min.js"></script><script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script><style> pre { width: 95%; } </style></head><body><div class="container"><div class="jumbotron"><h1>Users</h1></div><div class="panel panel-default"><div class="panel-heading" role="tab" id="heading-users-sessions-POST"><h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="collapse-users-sessions-POST" href="#collapse-users-sessions-POST">POST /users/sessions</a></h4></div><div id="collapse-users-sessions-POST" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-users-sessions-POST"><div class="panel-body"><h4>Request Data</h4><div class="container"><h5>Headers</h5><pre>{
+  "content-type": "application/json",
+  "content-length": 52
+}</pre><h5>Body</h5><pre>{
+  "email": "john.katz@wolox.co",
+  "password": "12345678"
+}</pre></div></div><div class="panel-body"><h4>Response Data</h4><div class="container"><h5>Status: 200</h5><h5>Headers</h5><pre>{
+  "content-type": "application/json",
+  "content-length": 52
+}</pre><h5>Body</h5><pre>{
+  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoiSm9obiIsImxhc3ROYW1lIjoiS2F0emVuYmFjaCIsImVtYWlsIjoiam9obi5rYXR6QHdvbG94LmNvIiwicm9sZSI6InJlZ3VsYXIiLCJpYXQiOjE1NjMyOTc1OTd9.2vpHOQwTwShjMin_EHT_-YJ5oJWBUQTARuN6m1Yniwg"
+}</pre></div></div></div></div><div class="panel panel-default"><div class="panel-heading" role="tab" id="heading-users-sessions-POST"><h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="collapse-users-sessions-POST" href="#collapse-users-sessions-POST">POST /users/sessions</a></h4></div><div id="collapse-users-sessions-POST" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-users-sessions-POST"><div class="panel-body"><h4>Request Data</h4><div class="container"><h5>Headers</h5><pre>{
+  "content-type": "application/json",
+  "content-length": 52
+}</pre><h5>Body</h5><pre>{
+  "email": "john.katz@wolox.cl",
+  "password": "12345678"
+}</pre></div></div><div class="panel-body"><h4>Response Data</h4><div class="container"><h5>Status: 401</h5><h5>Headers</h5><pre>{
+  "content-type": "application/json",
+  "content-length": 52
+}</pre><h5>Body</h5><pre>{
+  "message": "Your email or password is incorrect.",
+  "internal_code": "session_error"
+}</pre></div></div></div></div><div class="panel panel-default"><div class="panel-heading" role="tab" id="heading-users-sessions-POST"><h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="collapse-users-sessions-POST" href="#collapse-users-sessions-POST">POST /users/sessions</a></h4></div><div id="collapse-users-sessions-POST" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-users-sessions-POST"><div class="panel-body"><h4>Request Data</h4><div class="container"><h5>Headers</h5><pre>{
+  "content-type": "application/json",
+  "content-length": 49
+}</pre><h5>Body</h5><pre>{
+  "email": "john.katz@wolox.co",
+  "password": "12345"
+}</pre></div></div><div class="panel-body"><h4>Response Data</h4><div class="container"><h5>Status: 401</h5><h5>Headers</h5><pre>{
+  "content-type": "application/json",
+  "content-length": 49
+}</pre><h5>Body</h5><pre>{
+  "message": "Your email or password is incorrect.",
+  "internal_code": "session_error"
+}</pre></div></div></div></div><div class="panel panel-default"><div class="panel-heading" role="tab" id="heading-users-POST"><h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="collapse-users-POST" href="#collapse-users-POST">POST /users</a></h4></div><div id="collapse-users-POST" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-users-POST"><div class="panel-body"><h4>Request Data</h4><div class="container"><h5>Headers</h5><pre>{
   "content-type": "application/json",
   "content-length": 125
 }</pre><h5>Body</h5><pre>{
@@ -26,9 +61,7 @@
   "content-type": "application/json",
   "content-length": 127
 }</pre><h5>Body</h5><pre>{
-  "message": [
-    "The email is already registered"
-  ],
+  "message": "The email is already registered.",
   "internal_code": "bad_request"
 }</pre></div></div></div></div><div class="panel panel-default"><div class="panel-heading" role="tab" id="heading-users-POST"><h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="collapse-users-POST" href="#collapse-users-POST">POST /users</a></h4></div><div id="collapse-users-POST" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-users-POST"><div class="panel-body"><h4>Request Data</h4><div class="container"><h5>Headers</h5><pre>{
   "content-type": "application/json",
@@ -63,52 +96,18 @@
     "First Name should be at least 2 chars long and maximum of 50 chars"
   ],
   "internal_code": "bad_request"
-}</pre></div></div></div></div><div class="panel panel-default"><div class="panel-heading" role="tab" id="heading-users-sessions-POST"><h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="collapse-users-sessions-POST" href="#collapse-users-sessions-POST">POST /users/sessions</a></h4></div><div id="collapse-users-sessions-POST" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-users-sessions-POST"><div class="panel-body"><h4>Request Data</h4><div class="container"><h5>Headers</h5><pre>{
-  "content-type": "application/json",
-  "content-length": 52
-}</pre><h5>Body</h5><pre>{
-  "email": "john.katz@wolox.co",
-  "password": "12345678"
-}</pre></div></div><div class="panel-body"><h4>Response Data</h4><div class="container"><h5>Status: 200</h5><h5>Headers</h5><pre>{
-  "content-type": "application/json",
-  "content-length": 52
-}</pre><h5>Body</h5><pre>{
-  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoiSm9obiIsImxhc3ROYW1lIjoiS2F0emVuYmFjaCIsImVtYWlsIjoiam9obi5rYXR6QHdvbG94LmNvIiwiaWF0IjoxNTYyNzc4MjUzfQ.1oH9-aO_bBY3E0grqnGV-URDShxLjHCBYjQktbl3_R8"
-}</pre></div></div></div></div><div class="panel panel-default"><div class="panel-heading" role="tab" id="heading-users-sessions-POST"><h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="collapse-users-sessions-POST" href="#collapse-users-sessions-POST">POST /users/sessions</a></h4></div><div id="collapse-users-sessions-POST" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-users-sessions-POST"><div class="panel-body"><h4>Request Data</h4><div class="container"><h5>Headers</h5><pre>{
-  "content-type": "application/json",
-  "content-length": 52
-}</pre><h5>Body</h5><pre>{
-  "email": "john.katz@wolox.cl",
-  "password": "12345678"
-}</pre></div></div><div class="panel-body"><h4>Response Data</h4><div class="container"><h5>Status: 401</h5><h5>Headers</h5><pre>{
-  "content-type": "application/json",
-  "content-length": 52
-}</pre><h5>Body</h5><pre>{
-  "message": "Your email or password is incorrect.",
-  "internal_code": "session_error"
-}</pre></div></div></div></div><div class="panel panel-default"><div class="panel-heading" role="tab" id="heading-users-sessions-POST"><h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="collapse-users-sessions-POST" href="#collapse-users-sessions-POST">POST /users/sessions</a></h4></div><div id="collapse-users-sessions-POST" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-users-sessions-POST"><div class="panel-body"><h4>Request Data</h4><div class="container"><h5>Headers</h5><pre>{
-  "content-type": "application/json",
-  "content-length": 49
-}</pre><h5>Body</h5><pre>{
-  "email": "john.katz@wolox.co",
-  "password": "12345"
-}</pre></div></div><div class="panel-body"><h4>Response Data</h4><div class="container"><h5>Status: 401</h5><h5>Headers</h5><pre>{
-  "content-type": "application/json",
-  "content-length": 49
-}</pre><h5>Body</h5><pre>{
-  "message": "Your email or password is incorrect.",
-  "internal_code": "session_error"
 }</pre></div></div></div></div><div class="panel panel-default"><div class="panel-heading" role="tab" id="heading-users-GET"><h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="collapse-users-GET" href="#collapse-users-GET">GET /users</a></h4></div><div id="collapse-users-GET" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-users-GET"><div class="panel-body"><h4>Request Data</h4><div class="container"><h5>Headers</h5><pre>{
-  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoiSm9obiIsImxhc3ROYW1lIjoiS2F0emVuYmFjaCIsImVtYWlsIjoiam9obi5rYXR6QHdvbG94LmNvIiwiaWF0IjoxNTYyNzc4MjU0fQ.DGCpNCZjDDO3UrAx9hmtapCLd_eUzCxPl51fw_TkqRg"
+  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoiSm9obiIsImxhc3ROYW1lIjoiS2F0emVuYmFjaCIsImVtYWlsIjoiam9obi5rYXR6QHdvbG94LmNvIiwicm9sZSI6InJlZ3VsYXIiLCJpYXQiOjE1NjMyOTc1OTh9.ce8SLxetx14mPX7MEq2YSe57Zek5ArfSzh5n7-pGkDs"
 }</pre></div></div><div class="panel-body"><h4>Response Data</h4><div class="container"><h5>Status: 200</h5><h5>Headers</h5><pre>{
-  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoiSm9obiIsImxhc3ROYW1lIjoiS2F0emVuYmFjaCIsImVtYWlsIjoiam9obi5rYXR6QHdvbG94LmNvIiwiaWF0IjoxNTYyNzc4MjU0fQ.DGCpNCZjDDO3UrAx9hmtapCLd_eUzCxPl51fw_TkqRg"
+  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoiSm9obiIsImxhc3ROYW1lIjoiS2F0emVuYmFjaCIsImVtYWlsIjoiam9obi5rYXR6QHdvbG94LmNvIiwicm9sZSI6InJlZ3VsYXIiLCJpYXQiOjE1NjMyOTc1OTh9.ce8SLxetx14mPX7MEq2YSe57Zek5ArfSzh5n7-pGkDs"
 }</pre><h5>Body</h5><pre>{
   "users": [
     {
       "id": 1,
       "firstName": "John",
       "lastName": "Katzenbach",
-      "email": "john.katz@wolox.co"
+      "email": "john.katz@wolox.co",
+      "role": "regular"
     }
   ],
   "pageCount": 1,

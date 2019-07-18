@@ -18,12 +18,14 @@ exports.passwordDecryption = (password, hash) =>
     throw errors.decryptionError();
   });
 
-exports.generateToken = ({ id, firstName, lastName, email }) =>
-  jwt.signAsync({ id, firstName, lastName, email }, session.secret).catch(() => {
+exports.generateToken = ({ id, firstName, lastName, email, role }) =>
+  jwt.signAsync({ id, firstName, lastName, email, role }, session.secret).catch(() => {
     throw errors.generateTokenError();
   });
 
 exports.validateToken = token => jwt.verifyAsync(token, session.secret);
+
+exports.decodedToken = token => jwt.decode(token);
 
 exports.mapperUserList = ({ count, rows }, limit, page) => {
   const itemCount = count;

@@ -1,6 +1,8 @@
-const { passwordEncryption, mapperUserList } = require('../utils');
-const { userRegister, signIn, findAllUsers } = require('../services/users');
+const { mapperUserList } = require('../utils');
+const { userRegister, signIn, findAllUsers, changeRole, findUserBy } = require('../services/users');
 const logger = require('../logger');
+const { ADMIN_ROLE, REGULAR_ROLE } = require('../constants');
+const errors = require('../errors');
 
 exports.createUser = (req, res, next) => {
   const user = req.body;
@@ -8,13 +10,12 @@ exports.createUser = (req, res, next) => {
     `CreateUser method start, request methods: ${req.method}, endpoint: ${req.path}, 
     user: ${user.firstName} ${user.lastName}`
   );
-  return passwordEncryption(user)
-    .then(userRegister)
-    .then(response => {
-      logger.info(`User ${user.firstName} ${user.lastName} created successfully`);
+  return userRegister(user)
+    .then(({ firstName, lastName }) => {
+      logger.info(`User ${firstName} ${lastName} created successfully`);
       return res.status(201).send({
-        firstName: response.firstName,
-        lastName: response.lastName
+        firstName,
+        lastName
       });
     })
     .catch(next);
@@ -40,5 +41,32 @@ exports.getUsersList = (req, res, next) => {
   return findAllUsers(limit, offset)
     .then(foundUsers => mapperUserList(foundUsers, limit, page))
     .then(response => res.send(response))
+    .catch(next);
+};
+
+exports.createAdminUser = (req, res, next) => {
+  const user = req.body;
+  const { email } = user;
+  user.role = ADMIN_ROLE;
+  logger.info(`createAdminUser method start, request methods: ${req.method}, endpoint: ${req.path},
+  user: ${user.firstName} ${user.lastName}`);
+  findUserBy({ email })
+    .then(foundUser => {
+      if (foundUser) {
+        if (foundUser.role === REGULAR_ROLE) {
+          return changeRole(ADMIN_ROLE, email).then(() =>
+            res.status(201).send({ message: `User ${email} updated to admin` })
+          );
+        }
+        return next(errors.badRequest('The email is already registered for admin user.'));
+      }
+      return userRegister(user).then(({ firstName, lastName }) => {
+        logger.info(`Admin user ${firstName} ${lastName} created successfully`);
+        res.status(201).send({
+          firstName,
+          lastName
+        });
+      });
+    })
     .catch(next);
 };
