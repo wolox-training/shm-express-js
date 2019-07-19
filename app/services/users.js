@@ -1,62 +1,75 @@
 const { User } = require('../models');
 const errors = require('../errors');
 const logger = require('../logger');
-const { generateSecret } = require('../util');
+const { passwordEncryption, passwordDecryption, generateToken, generateSecret } = require('../utils');
 
 exports.userRegister = user =>
-  User.create(user).catch(() => {
-    logger.info(`Error trying to create the user ${user.firstName} ${user.lastName}`);
+  exports
+    .findUserBy({ email: user.email })
+    .then(foundUser => {
+      if (foundUser) {
+        throw errors.badRequest('The email is already registered.');
+      }
+      return passwordEncryption(user);
+    })
+    .then(userToCreate =>
+      User.create(userToCreate).catch(() => {
+        throw errors.databaseError('Error processing request in database.');
+      })
+    )
+    .catch(error => {
+      logger.error(`Error trying to create the user ${user.firstName} ${user.lastName}`);
+      throw error;
+    });
+
+exports.findUserBy = (conditions, attributes) =>
+  User.findOne({
+    where: conditions,
+    attributes
+  }).catch(() => {
+    logger.error('Error trying to find the user');
     throw errors.databaseError('Error processing request in database.');
   });
 
-exports.findUser = email =>
-  User.findOne({
-    where: { email },
-    raw: true,
-    attributes: ['id', 'firstName', 'lastName', 'email', 'password', 'role', 'secret']
-  }).catch(err => {
-    logger.info('Error trying to find the user');
-    throw errors.databaseError(`${err}`);
-  });
+exports.signIn = (email, password) => {
+  const attributes = ['id', 'firstName', 'lastName', 'email', 'password', 'role', 'secret'];
+  return exports
+    .findUserBy(email, attributes)
+    .then(foundUser => {
+      if (foundUser) {
+        return passwordDecryption(password, foundUser.password).then(registered =>
+          registered ? generateToken(foundUser) : null
+        );
+      }
+      throw errors.sessionError('Your email or password is incorrect.');
+    })
+    .then(token => {
+      if (token) {
+        return token;
+      }
+      throw errors.sessionError('Your email or password is incorrect.');
+    });
+};
 
-exports.findAllUser = (limit, offset) =>
+exports.findAllUsers = (limit, offset) =>
   User.findAndCountAll({
     limit,
     offset,
-    raw: true,
-    attributes: ['id', 'firstName', 'lastName', 'email']
-  }).catch(err => {
-    logger.info('Error trying to find the user');
-    throw errors.databaseError(`${err}`);
-  });
-
-exports.AdminUserRegister = user =>
-  User.create({ ...user, role: 'admin' }).catch(() => {
-    logger.info(`Error trying to create the user ${user.firstName} ${user.lastName}`);
+    attributes: ['id', 'firstName', 'lastName', 'email', 'role']
+  }).catch(() => {
+    logger.error('Error trying to find the users');
     throw errors.databaseError('Error processing request in database.');
   });
 
-exports.changeRole = email =>
+exports.changeRole = (role, email) =>
   User.update(
-    { role: 'admin' },
+    { role },
     {
-      where: { email },
-      raw: true,
-      returning: true
+      where: { email }
     }
   ).catch(() => {
-    logger.info('Error trying to update the user');
+    logger.error('Error trying to update the user');
     throw errors.databaseError('Error processing request in database.');
-  });
-
-exports.findUserSecret = id =>
-  User.findOne({
-    where: { id },
-    attributes: ['secret'],
-    raw: true
-  }).catch(err => {
-    logger.info('Error trying to find the user');
-    throw errors.databaseError(`${err}`);
   });
 
 exports.updateSecret = email => {
@@ -69,7 +82,7 @@ exports.updateSecret = email => {
       returning: true
     }
   ).catch(() => {
-    logger.info('Error trying to update the user');
+    logger.error('Error trying to update the user');
     throw errors.databaseError('Error processing request in database.');
   });
 };

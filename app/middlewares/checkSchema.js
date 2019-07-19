@@ -4,7 +4,7 @@ const error = require('../errors');
 
 const checkValidationResult = (req, res, next) => {
   const errors = validationResult(req);
-  return errors.isEmpty() ? next() : res.status(400).json({ errors: errors.array(), ...error.badRequest() });
+  return errors.isEmpty() ? next() : next(error.badRequest(errors.array().map(err => err.msg)));
 };
 
 exports.checkValidationSchema = schema => [checkSchema(schema), checkValidationResult];
