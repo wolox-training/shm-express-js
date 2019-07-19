@@ -13,8 +13,8 @@ exports.getAlbums = qs => {
     qs,
     json: true
   };
-  return request(options).catch(err => {
-    throw errors.albumError(`${message.MESSAGE_ALBUM_API_FAILED}. ${err.message}`);
+  return request(options).catch(error => {
+    throw errors.albumError(`${message.MESSAGE_ALBUM_API_FAILED}. ${error.message}`);
   });
 };
 
@@ -26,21 +26,27 @@ exports.getPhotosBy = qs => {
     json: true
   };
 
-  return request(options).catch(err => {
-    throw errors.albumError(`${message.MESSAGE_ALBUM_API_FAILED}. ${err.message}`);
+  return request(options).catch(error => {
+    throw errors.albumError(`${message.MESSAGE_ALBUM_API_FAILED}. ${error.message}`);
   });
 };
 
-exports.albumRegister = album =>
-  Album.create(album).catch(err => {
-    logger.info(`Error trying to register the album ${album.title}`);
-    if (err.name === message.BUY_ALBUM_CONSTRAINT_ERROR) {
-      throw errors.buyAlbumError('Duplicate purchase of an album is not allowed');
-    }
+exports.findAlbumBy = (condition, attributes) =>
+  Album.findOne({
+    where: condition,
+    attributes
+  }).catch(() => {
+    logger.error('Error trying to find the album');
     throw errors.databaseError('Error processing request in database.');
   });
 
-exports.findAllAlbums = (condition, attributes) =>
+exports.albumRegister = album =>
+  Album.create(album).catch(() => {
+    logger.error(`Error trying to register the album ${album.title}`);
+    throw errors.databaseError('Error processing request in database.');
+  });
+
+exports.findAllAlbumsBy = (condition, attributes) =>
   Album.findAll({
     where: condition,
     attributes
@@ -51,9 +57,9 @@ exports.findAllAlbums = (condition, attributes) =>
 
 exports.getAlbumPhotos = (id, userId) => {
   const attributes = ['id'];
-  return exports.findAllAlbums({ id, userId }, attributes).then(response => {
-    if (response.length) {
-      const albumId = response[0].dataValues.id;
+  return exports.findAlbumBy({ id, userId }, attributes).then(foundAlbum => {
+    if (foundAlbum) {
+      const albumId = foundAlbum.dataValues.id;
       return exports.getPhotosBy({ albumId }).then(albumsApi => albumsApi.map(({ url }) => url));
     }
     return [];

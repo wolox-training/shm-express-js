@@ -3,7 +3,8 @@
 module.exports = {
   up: (queryInterface, Sequelize) =>
     queryInterface.addColumn('users', 'role', {
-      type: Sequelize.STRING,
+      type: Sequelize.ENUM,
+      values: ['regular', 'admin'],
       allowNull: false,
       defaultValue: 'regular'
     }),
