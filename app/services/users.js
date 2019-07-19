@@ -77,9 +77,7 @@ exports.updateSecret = email => {
   return User.update(
     { secret },
     {
-      where: { email },
-      raw: true,
-      returning: true
+      where: { email }
     }
   ).catch(() => {
     logger.error('Error trying to update the user');
