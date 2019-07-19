@@ -13,8 +13,8 @@ exports.getAlbums = qs => {
     qs,
     json: true
   };
-  return request(options).catch(err => {
-    throw errors.albumError(`${message.MESSAGE_ALBUM_API_FAILED}. ${err.message}`);
+  return request(options).catch(error => {
+    throw errors.albumError(`${message.MESSAGE_ALBUM_API_FAILED}. ${error.message}`);
   });
 };
 
@@ -26,17 +26,23 @@ exports.getPhotosBy = qs => {
     json: true
   };
 
-  return request(options).catch(err => {
-    throw errors.albumError(`${message.MESSAGE_ALBUM_API_FAILED}. ${err.message}`);
+  return request(options).catch(error => {
+    throw errors.albumError(`${message.MESSAGE_ALBUM_API_FAILED}. ${error.message}`);
   });
 };
 
+exports.findAlbumBy = option =>
+  Album.findOne({
+    where: option,
+    attributes: ['id', 'title', 'user_id']
+  }).catch(() => {
+    logger.error('Error trying to find the album');
+    throw errors.databaseError('Error processing request in database.');
+  });
+
 exports.albumRegister = album =>
-  Album.create(album).catch(err => {
-    logger.info(`Error trying to register the album ${album.title}`);
-    if (err.name === message.BUY_ALBUM_CONSTRAINT_ERROR) {
-      throw errors.buyAlbumError('Duplicate purchase of an album is not allowed');
-    }
+  Album.create(album).catch(() => {
+    logger.error(`Error trying to register the album ${album.title}`);
     throw errors.databaseError('Error processing request in database.');
   });
 
