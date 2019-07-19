@@ -23,5 +23,5 @@ exports.init = app => {
     isAdminUser,
     createAdminUser
   );
-  app.post('/albums/:id', tokenValidator, buyAlbums);
+  app.post('/albums/:id', tokenValidator, checkValidationSchema(albumByIdValidator), buyAlbums);
 };
