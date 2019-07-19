@@ -5,7 +5,7 @@ const { getAllAlbums, getPhotos, buyAlbums, getAlbumsList } = require('./control
 const { createUser, signInUser, getUsersList, createAdminUser } = require('../app/controllers/user');
 const { checkValidationSchema } = require('./middlewares/checkSchema');
 const { signUpValidator, signInValidator } = require('./schemas/user');
-const { albumByIdValidator } = require('./schemas/album');
+const { albumByIdValidator, userByIdValidator } = require('./schemas/album');
 const { isAdminUser, allowList } = require('./middlewares/sessionValidator');
 const { tokenValidator } = require('./middlewares/session');
 
@@ -23,6 +23,12 @@ exports.init = app => {
     isAdminUser,
     createAdminUser
   );
-  app.post('/albums/:id', tokenValidator, buyAlbums);
-  app.get('/users/:user_id/albums', tokenValidator, allowList, getAlbumsList);
+  app.post('/albums/:id', tokenValidator, checkValidationSchema(albumByIdValidator), buyAlbums);
+  app.get(
+    '/users/:user_id/albums',
+    tokenValidator,
+    checkValidationSchema(userByIdValidator),
+    allowList,
+    getAlbumsList
+  );
 };
