@@ -1,80 +1,92 @@
-const validations = require('../util');
-const { userRegister, findUser, findAllUser, changeRole, updateSecret } = require('../services/users');
+const { mapperUserList } = require('../mappers/mappers');
+const {
+  userRegister,
+  signIn,
+  findAllUsers,
+  changeRole,
+  findUserBy,
+  updateSecret
+} = require('../services/users');
 const logger = require('../logger');
+const { ADMIN_ROLE, REGULAR_ROLE } = require('../constants');
 const errors = require('../errors');
+const { decodedToken } = require('../utils');
 const { expiresIn } = require('../../config').common.session;
 
 exports.createUser = (req, res, next) => {
-  logger.info('createUser method start.');
   const user = req.body;
-  return validations
-    .passwordEncryption(user)
-    .then(userRegister)
-    .then(response => {
-      logger.info(`User ${user.firstName} ${user.lastName} created successfully`);
+  logger.info(
+    `CreateUser method start, request methods: ${req.method}, endpoint: ${req.path}, 
+    user: ${user.firstName} ${user.lastName}`
+  );
+  return userRegister(user)
+    .then(({ firstName, lastName }) => {
+      logger.info(`User ${firstName} ${lastName} created successfully`);
       return res.status(201).send({
-        firstName: response.firstName,
-        lastName: response.lastName
+        firstName,
+        lastName
       });
     })
     .catch(next);
 };
 
 exports.signInUser = (req, res, next) => {
-  logger.info('SignInUser method start.');
   const { email, password } = req.body;
-  return findUser(email)
-    .then(foundUser => {
-      if (foundUser) {
-        return validations
-          .passwordDecryption(password, foundUser.password)
-          .then(registered => (registered ? validations.generateToken(foundUser) : null));
-      }
-      return null;
-    })
-    .then(token =>
-      token
-        ? res.status(200).send({ token, Message: `Your token will expire at ${expiresIn}` })
-        : res.status(401).send(errors.signUpError('Your email or password is incorrect.'))
-    )
+  logger.info(
+    `SignInUser method start, request methods: ${req.method}, endpoint: ${req.path}, email: ${email}`
+  );
+  return signIn({ email }, password)
+    .then(token => res.send({ token, Message: `Your session will expire at ${expiresIn}` }))
     .catch(next);
 };
 
-exports.getUserList = (req, res, next) => {
-  logger.info('getUserList method start.');
+exports.getUsersList = (req, res, next) => {
+  const { token } = req.headers;
+  logger.info(
+    `getUserList method start, request methods: ${req.method}, endpoint: ${req.path}, token: ${token}`
+  );
   const { limit, page } = req.query;
   const offset = req.skip;
-  return findAllUser(limit, offset)
-    .then(response => {
-      const itemCount = response.count;
-      const pageCount = Math.ceil(response.count / limit);
-      res.status(200).send({
-        users: response.rows,
-        pageCount,
-        itemCount,
-        page
+  return findAllUsers(limit, offset)
+    .then(foundUsers => mapperUserList(foundUsers, limit, page))
+    .then(response => res.send(response))
+    .catch(next);
+};
+
+exports.createAdminUser = (req, res, next) => {
+  const user = req.body;
+  const { email } = user;
+  const attributes = ['id', 'firstName', 'lastName', 'email', 'password', 'role'];
+  user.role = ADMIN_ROLE;
+  logger.info(`createAdminUser method start, request methods: ${req.method}, endpoint: ${req.path},
+  user: ${user.firstName} ${user.lastName}`);
+  findUserBy({ email }, attributes)
+    .then(foundUser => {
+      if (foundUser) {
+        if (foundUser.role === REGULAR_ROLE) {
+          return changeRole(ADMIN_ROLE, email).then(() =>
+            res.status(201).send({ message: `User ${email} updated to admin` })
+          );
+        }
+        return next(errors.badRequest('The email is already registered for admin user.'));
+      }
+      return userRegister(user).then(({ firstName, lastName }) => {
+        logger.info(`Admin user ${firstName} ${lastName} created successfully`);
+        res.status(201).send({
+          firstName,
+          lastName
+        });
       });
     })
     .catch(next);
 };
 
-exports.createAdminUser = (req, res, next) => {
-  logger.info('createAdminUser method start.');
-  req.body.role = 'admin';
-  return changeRole(req.body.email)
-    .then(updated =>
-      updated[0]
-        ? res.status(201).send({ message: `User ${updated[1][0].firstName} updated to admin` })
-        : exports.createUser(req, res, next)
-    )
-    .catch(next);
-};
-
 exports.disableAllSessions = (req, res, next) => {
   logger.info(`disableAllSessions method start, request methods: ${req.method}, endpoint: ${req.path}.`);
-  const { email } = validations.decodedToken(req.headers.token);
-  updateSecret(email)
+  const { email } = decodedToken(req.headers.token);
+  return updateSecret(email)
     .then(() => {
+      logger.info(`All sessions for the user ${email} have been disabled successfully`);
       res.status(200).send({ message: 'All sessions have been disabled' });
     })
     .catch(next);

@@ -1,12 +1,20 @@
-const albumsService = require('../services/albums');
+const {
+  getAlbums,
+  getPhotosBy,
+  albumRegister,
+  findAlbumBy,
+  findAllAlbumsBy,
+  getAlbumPhotos
+} = require('../services/albums');
 const logger = require('../logger');
 const message = require('../constants');
-const validations = require('../util');
+const { decodedToken } = require('../utils');
+const { albumMapper } = require('../mappers/mappers');
+const errors = require('../errors');
 
-exports.getAlbums = (req, res, next) => {
+exports.getAllAlbums = (req, res, next) => {
   logger.info(`${message.PREVIOUS_MESSAGE} to list of albums`);
-  return albumsService
-    .getAlbums()
+  return getAlbums()
     .then(response => {
       logger.info(message.MESSAGE_OK);
       return res.status(200).send(response);
@@ -19,8 +27,7 @@ exports.getPhotos = (req, res, next) => {
     albumId: req.params.id
   };
   logger.info(`${message.PREVIOUS_MESSAGE} to list of images of an album by the id: ${params.albumId}`);
-  return albumsService
-    .getPhotosBy(params)
+  return getPhotosBy(params)
     .then(response => {
       const albumImgUrl = response.map(({ url }) => url);
       logger.info(message.MESSAGE_OK);
@@ -30,43 +37,50 @@ exports.getPhotos = (req, res, next) => {
 };
 
 exports.buyAlbums = (req, res, next) => {
-  const user = validations.decodedToken(req.headers.token);
   const qs = {
     id: req.params.id
   };
-  return albumsService
-    .getAlbums(qs)
-    .then(response =>
-      albumsService.albumRegister(validations.albumMapper(response[0], user.id)).then(({ dataValues }) => {
-        logger.info(`Album ${dataValues.title} successfully purchased`);
-        res.status(201).send({
-          album: {
-            id: dataValues.id,
-            title: dataValues.title
-          }
+  const attributes = ['id', 'title', 'user_id'];
+  logger.info(`buyAlbums method start, request methods: ${req.method}, endpoint: ${req.path}, id: ${qs.id}`);
+  findAlbumBy(qs, attributes)
+    .then(purchasedAlbum => {
+      if (purchasedAlbum) {
+        return next(errors.buyAlbumError('Duplicate purchase of an album is not allowed'));
+      }
+      const user = decodedToken(req.headers.token);
+      return getAlbums(qs).then(([{ id, title }]) => {
+        albumRegister(albumMapper(id, title, user.id)).then(() => {
+          logger.info(`Album ${title} successfully purchased`);
+          res.status(201).send({
+            album: {
+              id,
+              title
+            }
+          });
         });
-      })
-    )
+      });
+    })
     .catch(next);
 };
 
 exports.getAlbumsList = (req, res, next) => {
-  logger.info('getAlbumsList method start.');
+  logger.info(`getAlbumsList method start, request methods: ${req.method}, endpoint: ${req.path}`);
   const attributes = ['id', 'title'];
-  albumsService
-    .findAllAlbums(req.params, attributes)
-    .then(response => {
-      res.send({ albums: response });
+  const { user_id } = req.params;
+  return findAllAlbumsBy({ user_id }, attributes)
+    .then(albums => {
+      res.send({ albums });
     })
     .catch(next);
 };
 
 exports.getAlbumPhotosList = (req, res, next) => {
-  logger.info('getAlbumPhotosList method start.');
-  const user = validations.decodedToken(req.headers.token);
   const { id } = req.params;
-  return albumsService
-    .getAlbumPhotos(id, user.id)
-    .then(response => res.send({ albumPhotos: response }))
+  logger.info(
+    `getAlbumPhotosList method start, request methods: ${req.method}, endpoint: ${req.path}, id: ${id}`
+  );
+  const user = decodedToken(req.headers.token);
+  return getAlbumPhotos(id, user.id)
+    .then(albumPhotos => res.send({ albumPhotos }))
     .catch(next);
 };
