@@ -1,10 +1,10 @@
 const request = require('supertest');
 const dictum = require('dictum.js');
+
 const { albumMock, errorAlbumMock } = require('./mocks/albums');
-
 const { signUp, signIn } = require('./utils/users');
-
 const app = require('../app');
+
 const controller = request(app);
 
 jest.mock('request-promise');

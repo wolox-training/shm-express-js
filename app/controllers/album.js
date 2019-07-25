@@ -2,7 +2,7 @@ const { getAlbums, getPhotosBy, albumRegister, findAlbumBy } = require('../servi
 const logger = require('../logger');
 const message = require('../constants');
 const { decodedToken } = require('../utils');
-const { albumMapper } = require('../mappers/mappers');
+const { albumMapper } = require('../mappers/albums');
 const errors = require('../errors');
 
 exports.getAlbums = (req, res, next) => {
