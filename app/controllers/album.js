@@ -5,9 +5,9 @@ const { decodedToken } = require('../utils');
 const { albumMapper } = require('../mappers/mappers');
 const errors = require('../errors');
 
-exports.getAllAlbums = (req, res, next) => {
+exports.getAlbums = (req, res, next) => {
   logger.info(`${message.PREVIOUS_MESSAGE} to list of albums`);
-  return getAlbums()
+  return getAlbums(req.query)
     .then(response => {
       logger.info(message.MESSAGE_OK);
       return res.status(200).send(response);
@@ -30,27 +30,26 @@ exports.getPhotos = (req, res, next) => {
 };
 
 exports.buyAlbums = (req, res, next) => {
-  const qs = {
-    id: req.params.id
-  };
-  logger.info(`buyAlbums method start, request methods: ${req.method}, endpoint: ${req.path}, id: ${qs.id}`);
-  findAlbumBy(qs)
+  logger.info(
+    `buyAlbums method start, request methods: ${req.method}, endpoint: ${req.path}, id: ${req.params.id}`
+  );
+  return findAlbumBy(req.params)
     .then(purchasedAlbum => {
       if (purchasedAlbum) {
         return next(errors.buyAlbumError('Duplicate purchase of an album is not allowed'));
       }
       const user = decodedToken(req.headers.token);
-      return getAlbums(qs).then(([{ id, title }]) => {
+      return getAlbums(req.params).then(([{ id, title }]) =>
         albumRegister(albumMapper(id, title, user.id)).then(() => {
           logger.info(`Album ${title} successfully purchased`);
-          res.status(201).send({
+          return res.status(201).send({
             album: {
               id,
               title
             }
           });
-        });
-      });
+        })
+      );
     })
     .catch(next);
 };

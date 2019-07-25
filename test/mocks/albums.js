@@ -1,15 +1,15 @@
-const nock = require('nock');
+const requestPromise = require('request-promise');
 
-exports.albumMock = () =>
-  beforeEach(() =>
-    nock('https://jsonplaceholder.typicode.com')
-      .get('/albums')
-      .times(2)
-      .query({ id: '1' })
-      .reply(200, [
-        {
-          id: 1,
-          title: 'quidem molestiae enim'
-        }
-      ])
-  );
+const errors = require('../../app/errors');
+const { MESSAGE_ALBUM_API_FAILED } = require('../../app/constants');
+
+const albumResponse = [
+  {
+    id: 1,
+    title: 'quidem molestiae enim'
+  }
+];
+
+exports.albumMock = (value = albumResponse) => requestPromise.mockResolvedValue(value);
+exports.errorAlbumMock = () =>
+  requestPromise.mockRejectedValue(new Error(errors.albumError(MESSAGE_ALBUM_API_FAILED)));
