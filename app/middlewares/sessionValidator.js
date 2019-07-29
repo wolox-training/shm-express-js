@@ -11,6 +11,6 @@ exports.isAdminUser = (req, res, next) => {
 
 exports.allowList = (req, res, next) => {
   const { id } = decodedToken(req.headers.token);
-  const { user_id } = req.params;
-  return id === parseInt(user_id) ? next() : exports.isAdminUser(req, res, next);
+  const { userId } = req.params;
+  return id === parseInt(userId) ? next() : exports.isAdminUser(req, res, next);
 };

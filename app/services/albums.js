@@ -1,7 +1,7 @@
 const request = require('request-promise');
 
 const errors = require('../errors');
-const message = require('../constants');
+const { MESSAGE_ALBUM_API_FAILED, DATABASE_ERROR } = require('../constants');
 const { resources } = require('../../config').common;
 const { Album } = require('../models');
 const logger = require('../logger');
@@ -13,8 +13,9 @@ exports.getAlbums = qs => {
     qs,
     json: true
   };
-  return request(options).catch(error => {
-    throw errors.albumError(`${message.MESSAGE_ALBUM_API_FAILED}. ${error.message}`);
+  return request(options).catch(() => {
+    logger.error('Error trying to consume album API');
+    throw errors.albumError(MESSAGE_ALBUM_API_FAILED);
   });
 };
 
@@ -26,8 +27,9 @@ exports.getPhotosBy = qs => {
     json: true
   };
 
-  return request(options).catch(error => {
-    throw errors.albumError(`${message.MESSAGE_ALBUM_API_FAILED}. ${error.message}`);
+  return request(options).catch(() => {
+    logger.error('Error trying to consume album API');
+    throw errors.albumError(MESSAGE_ALBUM_API_FAILED);
   });
 };
 
@@ -37,7 +39,7 @@ exports.findAlbumBy = option =>
     attributes: ['id', 'title', 'user_id']
   }).catch(() => {
     logger.error('Error trying to find the album');
-    throw errors.databaseError('Error processing request in database.');
+    throw errors.databaseError(DATABASE_ERROR);
   });
 
 exports.albumRegister = album =>

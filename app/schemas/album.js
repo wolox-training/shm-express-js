@@ -7,7 +7,7 @@ exports.albumByIdValidator = {
 };
 
 exports.userByIdValidator = {
-  user_id: {
+  userId: {
     in: ['params'],
     isInt: true,
     errorMessage: 'The userId must be numeric.'
