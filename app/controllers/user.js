@@ -1,4 +1,4 @@
-const { mapperUserList } = require('../utils');
+const { mapperUserList } = require('../mappers/users');
 const { userRegister, signIn, findAllUsers, changeRole, findUserBy } = require('../services/users');
 const logger = require('../logger');
 const { ADMIN_ROLE, REGULAR_ROLE } = require('../constants');

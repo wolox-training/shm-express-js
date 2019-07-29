@@ -35,5 +35,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
+  User.associate = models => User.hasMany(models.Album);
+
   return User;
 };

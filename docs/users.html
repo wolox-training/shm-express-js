@@ -8,7 +8,7 @@
   "content-type": "application/json",
   "content-length": 52
 }</pre><h5>Body</h5><pre>{
-  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoiSm9obiIsImxhc3ROYW1lIjoiS2F0emVuYmFjaCIsImVtYWlsIjoiam9obi5rYXR6QHdvbG94LmNvIiwicm9sZSI6InJlZ3VsYXIiLCJpYXQiOjE1NjMyOTc1OTd9.2vpHOQwTwShjMin_EHT_-YJ5oJWBUQTARuN6m1Yniwg"
+  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoiSm9obiIsImxhc3ROYW1lIjoiS2F0emVuYmFjaCIsImVtYWlsIjoiam9obi5rYXR6QHdvbG94LmNvIiwicm9sZSI6InJlZ3VsYXIiLCJpYXQiOjE1NjQwNzc5MzN9.Qn9NqfU4jQckFkzULEhkzjnsGHaptuw7XngaAjt7uTg"
 }</pre></div></div></div></div><div class="panel panel-default"><div class="panel-heading" role="tab" id="heading-users-sessions-POST"><h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="collapse-users-sessions-POST" href="#collapse-users-sessions-POST">POST /users/sessions</a></h4></div><div id="collapse-users-sessions-POST" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-users-sessions-POST"><div class="panel-body"><h4>Request Data</h4><div class="container"><h5>Headers</h5><pre>{
   "content-type": "application/json",
   "content-length": 52
@@ -35,46 +35,43 @@
   "internal_code": "session_error"
 }</pre></div></div></div></div><div class="panel panel-default"><div class="panel-heading" role="tab" id="heading-users-POST"><h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="collapse-users-POST" href="#collapse-users-POST">POST /users</a></h4></div><div id="collapse-users-POST" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-users-POST"><div class="panel-body"><h4>Request Data</h4><div class="container"><h5>Headers</h5><pre>{
   "content-type": "application/json",
-  "content-length": 125
+  "content-length": 95
 }</pre><h5>Body</h5><pre>{
   "firstName": "John",
   "lastName": "Katzenbach",
   "email": "john.katz@wolox.co",
-  "password": "12345678",
-  "confirm_password": "12345678"
+  "password": "12345678"
 }</pre></div></div><div class="panel-body"><h4>Response Data</h4><div class="container"><h5>Status: 201</h5><h5>Headers</h5><pre>{
   "content-type": "application/json",
-  "content-length": 125
+  "content-length": 95
 }</pre><h5>Body</h5><pre>{
   "firstName": "John",
   "lastName": "Katzenbach"
 }</pre></div></div></div></div><div class="panel panel-default"><div class="panel-heading" role="tab" id="heading-users-POST"><h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="collapse-users-POST" href="#collapse-users-POST">POST /users</a></h4></div><div id="collapse-users-POST" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-users-POST"><div class="panel-body"><h4>Request Data</h4><div class="container"><h5>Headers</h5><pre>{
   "content-type": "application/json",
-  "content-length": 127
+  "content-length": 96
 }</pre><h5>Body</h5><pre>{
   "firstName": "Jose",
-  "lastName": "Perez",
-  "email": "jose.perez@wolox.com.ar",
-  "password": "12345test",
-  "confirm_password": "12345test"
+  "lastName": "Katzenbach",
+  "email": "john.katz@wolox.co",
+  "password": "12345test"
 }</pre></div></div><div class="panel-body"><h4>Response Data</h4><div class="container"><h5>Status: 400</h5><h5>Headers</h5><pre>{
   "content-type": "application/json",
-  "content-length": 127
+  "content-length": 96
 }</pre><h5>Body</h5><pre>{
   "message": "The email is already registered.",
   "internal_code": "bad_request"
 }</pre></div></div></div></div><div class="panel panel-default"><div class="panel-heading" role="tab" id="heading-users-POST"><h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="collapse-users-POST" href="#collapse-users-POST">POST /users</a></h4></div><div id="collapse-users-POST" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-users-POST"><div class="panel-body"><h4>Request Data</h4><div class="container"><h5>Headers</h5><pre>{
   "content-type": "application/json",
-  "content-length": 115
+  "content-length": 90
 }</pre><h5>Body</h5><pre>{
   "firstName": "John",
   "lastName": "Katzenbach",
   "email": "john.katz@wolox.co",
-  "password": "123",
-  "confirm_password": "123"
+  "password": "123"
 }</pre></div></div><div class="panel-body"><h4>Response Data</h4><div class="container"><h5>Status: 400</h5><h5>Headers</h5><pre>{
   "content-type": "application/json",
-  "content-length": 115
+  "content-length": 90
 }</pre><h5>Body</h5><pre>{
   "message": [
     "Password should be at least 8 chars long"
@@ -97,9 +94,9 @@
   ],
   "internal_code": "bad_request"
 }</pre></div></div></div></div><div class="panel panel-default"><div class="panel-heading" role="tab" id="heading-users-GET"><h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="collapse-users-GET" href="#collapse-users-GET">GET /users</a></h4></div><div id="collapse-users-GET" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-users-GET"><div class="panel-body"><h4>Request Data</h4><div class="container"><h5>Headers</h5><pre>{
-  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoiSm9obiIsImxhc3ROYW1lIjoiS2F0emVuYmFjaCIsImVtYWlsIjoiam9obi5rYXR6QHdvbG94LmNvIiwicm9sZSI6InJlZ3VsYXIiLCJpYXQiOjE1NjMyOTc1OTh9.ce8SLxetx14mPX7MEq2YSe57Zek5ArfSzh5n7-pGkDs"
+  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoiSm9obiIsImxhc3ROYW1lIjoiS2F0emVuYmFjaCIsImVtYWlsIjoiam9obi5rYXR6QHdvbG94LmNvIiwicm9sZSI6InJlZ3VsYXIiLCJpYXQiOjE1NjQwNzc5MzR9.36kIEd6zMbZqyMHdTKvStx4JQebgJlceU2FfvNc7VxU"
 }</pre></div></div><div class="panel-body"><h4>Response Data</h4><div class="container"><h5>Status: 200</h5><h5>Headers</h5><pre>{
-  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoiSm9obiIsImxhc3ROYW1lIjoiS2F0emVuYmFjaCIsImVtYWlsIjoiam9obi5rYXR6QHdvbG94LmNvIiwicm9sZSI6InJlZ3VsYXIiLCJpYXQiOjE1NjMyOTc1OTh9.ce8SLxetx14mPX7MEq2YSe57Zek5ArfSzh5n7-pGkDs"
+  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiZmlyc3ROYW1lIjoiSm9obiIsImxhc3ROYW1lIjoiS2F0emVuYmFjaCIsImVtYWlsIjoiam9obi5rYXR6QHdvbG94LmNvIiwicm9sZSI6InJlZ3VsYXIiLCJpYXQiOjE1NjQwNzc5MzR9.36kIEd6zMbZqyMHdTKvStx4JQebgJlceU2FfvNc7VxU"
 }</pre><h5>Body</h5><pre>{
   "users": [
     {

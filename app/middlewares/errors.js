@@ -8,7 +8,8 @@ const statusCodes = {
   [errors.DEFAULT_ERROR]: 500,
   [errors.ALBUM_API_ERROR]: 501,
   [errors.BAD_REQUEST]: 400,
-  [errors.SESSION_ERROR]: 401
+  [errors.SESSION_ERROR]: 401,
+  [errors.BUY_ALBUM_ERROR]: 422
 };
 
 exports.handle = (error, req, res, next) => {

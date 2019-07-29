@@ -19,6 +19,8 @@ exports.SESSION_ERROR = 'session_error';
 
 exports.GENERATE_TOKEN_ERROR = 'generate_token_error.';
 
+exports.BUY_ALBUM_ERROR = 'buy_album_error';
+
 exports.databaseError = message => internalError(message, exports.DATABASE_ERROR);
 
 exports.defaultError = message => internalError(message, exports.DEFAULT_ERROR);
@@ -37,3 +39,5 @@ exports.sessionError = message => internalError(message, exports.SESSION_ERROR);
 
 exports.generateTokenError = () =>
   internalError('Error trying to generate the token.', exports.GENERATE_TOKEN_ERROR);
+
+exports.buyAlbumError = message => internalError(message, exports.BUY_ALBUM_ERROR);
