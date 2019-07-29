@@ -1,12 +1,12 @@
 const paginate = require('express-paginate');
 
 const { healthCheck } = require('./controllers/healthCheck');
-const { getAlbums, getPhotos, buyAlbums } = require('./controllers/album');
+const { getAlbums, getPhotos, buyAlbums, getAlbumsList } = require('./controllers/album');
 const { createUser, signInUser, getUsersList, createAdminUser } = require('../app/controllers/user');
 const { checkValidationSchema } = require('./middlewares/checkSchema');
 const { signUpValidator, signInValidator } = require('./schemas/user');
-const { albumByIdValidator } = require('./schemas/album');
-const { isAdminUser } = require('./middlewares/sessionValidator');
+const { albumByIdValidator, userByIdValidator } = require('./schemas/album');
+const { isAdminUser, allowList } = require('./middlewares/sessionValidator');
 const { tokenValidator } = require('./middlewares/session');
 
 exports.init = app => {
@@ -24,4 +24,11 @@ exports.init = app => {
     createAdminUser
   );
   app.post('/albums/:id', tokenValidator, checkValidationSchema(albumByIdValidator), buyAlbums);
+  app.get(
+    '/users/:userId/albums',
+    tokenValidator,
+    checkValidationSchema(userByIdValidator),
+    allowList,
+    getAlbumsList
+  );
 };

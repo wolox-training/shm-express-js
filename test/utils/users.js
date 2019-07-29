@@ -24,8 +24,8 @@ const adminUser = {
   role: 'admin'
 };
 
-exports.createAdmin = () => User.create(adminUser);
+exports.createAdmin = (user = adminUser) => User.create(user);
 
 exports.signUp = () => controller.post('/users').send(userSignUp);
 
-exports.signIn = () => controller.post('/users/sessions').send(userSignIn);
+exports.signIn = (user = userSignIn) => controller.post('/users/sessions').send(user);

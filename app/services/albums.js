@@ -45,5 +45,14 @@ exports.findAlbumBy = option =>
 exports.albumRegister = album =>
   Album.create(album).catch(() => {
     logger.error(`Error trying to register the album ${album.title}`);
-    throw errors.databaseError(DATABASE_ERROR);
+    throw errors.databaseError('Error processing request in database.');
+  });
+
+exports.findAllAlbumsBy = option =>
+  Album.findAll({
+    where: option,
+    attributes: ['id', 'title']
+  }).catch(() => {
+    logger.info("Error trying to get the user's albums");
+    throw errors.databaseError('Error processing request in database.');
   });

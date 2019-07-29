@@ -5,3 +5,11 @@ exports.albumByIdValidator = {
     errorMessage: 'The id must be numeric and must be between 1 and 100.'
   }
 };
+
+exports.userByIdValidator = {
+  userId: {
+    in: ['params'],
+    isInt: true,
+    errorMessage: 'The userId must be numeric.'
+  }
+};
