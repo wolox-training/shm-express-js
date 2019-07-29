@@ -1,4 +1,4 @@
-const { getAlbums, getPhotosBy, albumRegister, findAlbumBy, findAllAlbums } = require('../services/albums');
+const { getAlbums, getPhotosBy, albumRegister, findAlbumBy, findAllAlbumsBy } = require('../services/albums');
 const logger = require('../logger');
 const message = require('../constants');
 const { decodedToken } = require('../utils');
@@ -56,7 +56,7 @@ exports.buyAlbums = (req, res, next) => {
 
 exports.getAlbumsList = (req, res, next) => {
   logger.info(`getAlbumsList method start, request methods: ${req.method}, endpoint: ${req.path}`);
-  return findAllAlbums(req.params.userId)
+  return findAllAlbumsBy(req.params)
     .then(albums => res.send({ albums }))
     .catch(next);
 };
