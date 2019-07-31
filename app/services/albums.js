@@ -57,13 +57,11 @@ exports.findAllAlbumsBy = ({ condition, attributes }) =>
     throw errors.databaseError(DATABASE_ERROR);
   });
 
-exports.getAlbumPhotos = ({ id, userId }) => {
-  const attributes = ['id'];
-  return exports.findAlbumBy({ condition: { id, userId }, attributes }).then(foundAlbum => {
+exports.getAlbumPhotos = ({ id, userId }) =>
+  exports.findAlbumBy({ condition: { id, userId }, attributes: ['id'] }).then(foundAlbum => {
     if (!foundAlbum) {
       return [];
     }
     const albumId = foundAlbum.dataValues.id;
     return exports.getPhotosBy({ albumId });
   });
-};
