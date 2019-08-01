@@ -1,10 +1,11 @@
 const request = require('supertest');
 const dictum = require('dictum.js');
 
-const app = require('../app');
+const { albumMock, errorAlbumMock, albumPhotosMock } = require('./mocks/albums');
 const { signUp, signIn, createAdmin } = require('./utils/users');
-const { albumMock, albumPhotosMock } = require('./mocks/albums');
+const app = require('../app');
 
+const controller = request(app);
 const userAdmin = {
   firstName: 'Nick',
   lastName: 'Hull',
@@ -12,10 +13,13 @@ const userAdmin = {
   password: '$2b$10$RRxm4aogjwxe.QNoZJfbxuJrCHPD5hv5XR4JT.kUlIXfEE9qoR3B6',
   role: 'admin'
 };
-const controller = request(app);
 
-albumMock();
-albumPhotosMock();
+jest.mock('request-promise');
+
+beforeEach(() => {
+  albumMock();
+});
+afterEach(() => jest.clearAllMocks());
 
 describe('POST /albums/:id', () => {
   test('Successful test when buying an album', () =>
@@ -49,9 +53,24 @@ describe('POST /albums/:id', () => {
         });
         dictum.chai(response, 'Test when you buy the same album twice');
       }));
+
+  test('Test when you buy an album and the external API fails.', () => {
+    errorAlbumMock();
+    return signUp()
+      .then(() => signIn())
+      .then(({ body }) => controller.post('/albums/1').set({ token: body.token }))
+      .then(response => {
+        const { message, internal_code } = response.body;
+        expect({ message, internal_code }).toStrictEqual({
+          message: 'Error consuming album API',
+          internal_code: 'error_consuming_album_api'
+        });
+        dictum.chai(response, 'Test when you buy an album and the external API fails.');
+      });
+  });
 });
 
-describe('GET /users/:user_id/albums', () => {
+describe('GET /users/:userId/albums', () => {
   test('Successful test to list purchased albums', () =>
     signUp()
       .then(() => signIn())
@@ -112,6 +131,9 @@ describe('GET /users/:user_id/albums', () => {
 });
 
 describe('GET /users/albums/:id/photos', () => {
+  beforeEach(() => {
+    albumPhotosMock();
+  });
   test('Successful test when listing the photos of an album purchased by a regular user', () =>
     signUp()
       .then(() => signIn())
@@ -125,7 +147,22 @@ describe('GET /users/albums/:id/photos', () => {
         const { albumPhotos } = response.body;
         expect({ status: response.statusCode, albumPhotos }).toStrictEqual({
           status: 200,
-          albumPhotos: ['https://via.placeholder.com/600/92c952', 'https://via.placeholder.com/600/771796']
+          albumPhotos: [
+            {
+              albumId: 1,
+              id: 1,
+              title: 'accusamus beatae ad facilis cum similique qui sunt',
+              url: 'https://via.placeholder.com/600/92c952',
+              thumbnailUrl: 'https://via.placeholder.com/150/92c952'
+            },
+            {
+              albumId: 1,
+              id: 2,
+              title: 'reprehenderit est deserunt velit ipsam',
+              url: 'https://via.placeholder.com/600/771796',
+              thumbnailUrl: 'https://via.placeholder.com/150/771796'
+            }
+          ]
         });
         dictum.chai(response, 'Successful test when listing the photos of the purchased album');
       }));
@@ -148,7 +185,22 @@ describe('GET /users/albums/:id/photos', () => {
         const { albumPhotos } = response.body;
         expect({ status: response.statusCode, albumPhotos }).toStrictEqual({
           status: 200,
-          albumPhotos: ['https://via.placeholder.com/600/92c952', 'https://via.placeholder.com/600/771796']
+          albumPhotos: [
+            {
+              albumId: 1,
+              id: 1,
+              title: 'accusamus beatae ad facilis cum similique qui sunt',
+              url: 'https://via.placeholder.com/600/92c952',
+              thumbnailUrl: 'https://via.placeholder.com/150/92c952'
+            },
+            {
+              albumId: 1,
+              id: 2,
+              title: 'reprehenderit est deserunt velit ipsam',
+              url: 'https://via.placeholder.com/600/771796',
+              thumbnailUrl: 'https://via.placeholder.com/150/771796'
+            }
+          ]
         });
         dictum.chai(response, 'Successful test when listing the photos of the purchased album');
       }));

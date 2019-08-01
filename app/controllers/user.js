@@ -1,4 +1,4 @@
-const { mapperUserList } = require('../mappers/mappers');
+const { mapperUserList } = require('../mappers/users');
 const {
   userRegister,
   signIn,
@@ -34,7 +34,7 @@ exports.signInUser = (req, res, next) => {
   logger.info(
     `SignInUser method start, request methods: ${req.method}, endpoint: ${req.path}, email: ${email}`
   );
-  return signIn({ email }, password)
+  return signIn({ email, password })
     .then(token => res.send({ token }))
     .catch(next);
 };
@@ -46,7 +46,7 @@ exports.getUsersList = (req, res, next) => {
   );
   const { limit, page } = req.query;
   const offset = req.skip;
-  return findAllUsers(limit, offset)
+  return findAllUsers({ limit, offset })
     .then(foundUsers => mapperUserList(foundUsers, limit, page))
     .then(response => res.send(response))
     .catch(next);
@@ -55,15 +55,17 @@ exports.getUsersList = (req, res, next) => {
 exports.createAdminUser = (req, res, next) => {
   const user = req.body;
   const { email } = user;
-  const attributes = ['id', 'firstName', 'lastName', 'email', 'password', 'role'];
   user.role = ADMIN_ROLE;
   logger.info(`createAdminUser method start, request methods: ${req.method}, endpoint: ${req.path},
   user: ${user.firstName} ${user.lastName}`);
-  findUserBy({ email }, attributes)
+  findUserBy({
+    conditions: { email },
+    attributes: ['id', 'firstName', 'lastName', 'email', 'password', 'role']
+  })
     .then(foundUser => {
       if (foundUser) {
         if (foundUser.role === REGULAR_ROLE) {
-          return changeRole(ADMIN_ROLE, email).then(() =>
+          return changeRole({ role: ADMIN_ROLE, email }).then(() =>
             res.status(201).send({ message: `User ${email} updated to admin` })
           );
         }
@@ -86,7 +88,7 @@ exports.disableAllSessions = (req, res, next) => {
   return updateSecret(email)
     .then(() => {
       logger.info(`All sessions for the user ${email} have been disabled successfully`);
-      res.status(200).send({ message: 'All sessions have been disabled' });
+      return res.status(200).send({ message: 'All sessions have been disabled' });
     })
     .catch(next);
 };

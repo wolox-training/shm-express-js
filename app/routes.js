@@ -1,13 +1,7 @@
 const paginate = require('express-paginate');
 
 const { healthCheck } = require('./controllers/healthCheck');
-const {
-  getAllAlbums,
-  getPhotos,
-  buyAlbums,
-  getAlbumsList,
-  getAlbumPhotosList
-} = require('./controllers/album');
+const { getAlbums, getPhotos, buyAlbums, getAlbumsList, getAlbumPhotosList } = require('./controllers/album');
 const {
   createUser,
   signInUser,
@@ -23,7 +17,7 @@ const { tokenValidator } = require('./middlewares/session');
 
 exports.init = app => {
   app.get('/health', healthCheck);
-  app.get('/albums', getAllAlbums);
+  app.get('/albums', getAlbums);
   app.get('/albums/:id/photos', checkValidationSchema(albumByIdValidator), getPhotos);
   app.post('/users', checkValidationSchema(signUpValidator), createUser);
   app.post('/users/sessions', checkValidationSchema(signInValidator), signInUser);
@@ -37,7 +31,7 @@ exports.init = app => {
   );
   app.post('/albums/:id', tokenValidator, checkValidationSchema(albumByIdValidator), buyAlbums);
   app.get(
-    '/users/:user_id/albums',
+    '/users/:userId/albums',
     tokenValidator,
     checkValidationSchema(userByIdValidator),
     allowList,
