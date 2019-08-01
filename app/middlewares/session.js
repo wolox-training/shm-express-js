@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 const { validateToken, decodedToken } = require('../utils');
 const errors = require('../errors');
 const { findUserBy } = require('../services/users');
@@ -8,8 +10,8 @@ exports.tokenValidator = (req, res, next) => {
     return validateToken(token)
       .then(() => {
         const { email, iat } = decodedToken(token);
-        findUserBy({ email }, ['allowedDate']).then(({ allowedDate }) => {
-          const dateToken = new Date(iat * 1000);
+        return findUserBy({ email }, ['allowedDate']).then(({ allowedDate }) => {
+          const dateToken = moment.unix(iat);
           if (dateToken > allowedDate) {
             return next();
           }
