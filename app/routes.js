@@ -1,7 +1,7 @@
 const paginate = require('express-paginate');
 
 const { healthCheck } = require('./controllers/healthCheck');
-const { getAlbums, getPhotos, buyAlbums, getAlbumsList } = require('./controllers/album');
+const { getAlbums, getPhotos, buyAlbums, getAlbumsList, getAlbumPhotosList } = require('./controllers/album');
 const { createUser, signInUser, getUsersList, createAdminUser } = require('../app/controllers/user');
 const { checkValidationSchema } = require('./middlewares/checkSchema');
 const { signUpValidator, signInValidator } = require('./schemas/user');
@@ -30,5 +30,11 @@ exports.init = app => {
     checkValidationSchema(userByIdValidator),
     allowList,
     getAlbumsList
+  );
+  app.get(
+    '/users/albums/:id/photos',
+    tokenValidator,
+    checkValidationSchema(albumByIdValidator),
+    getAlbumPhotosList
   );
 };

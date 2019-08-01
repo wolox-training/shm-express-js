@@ -1,11 +1,18 @@
 const request = require('supertest');
 const dictum = require('dictum.js');
 
-const { albumMock, errorAlbumMock } = require('./mocks/albums');
+const { albumMock, errorAlbumMock, albumPhotosMock } = require('./mocks/albums');
 const { signUp, signIn, createAdmin } = require('./utils/users');
 const app = require('../app');
 
 const controller = request(app);
+const userAdmin = {
+  firstName: 'Nick',
+  lastName: 'Hull',
+  email: 'nick.hull@wolox.co',
+  password: '$2b$10$RRxm4aogjwxe.QNoZJfbxuJrCHPD5hv5XR4JT.kUlIXfEE9qoR3B6',
+  role: 'admin'
+};
 
 jest.mock('request-promise');
 
@@ -64,13 +71,6 @@ describe('POST /albums/:id', () => {
 });
 
 describe('GET /users/:userId/albums', () => {
-  const userAdmin = {
-    firstName: 'Nick',
-    lastName: 'Hull',
-    email: 'nick.hull@wolox.co',
-    password: '$2b$10$RRxm4aogjwxe.QNoZJfbxuJrCHPD5hv5XR4JT.kUlIXfEE9qoR3B6',
-    role: 'admin'
-  };
   test('Successful test to list purchased albums', () =>
     signUp()
       .then(() => signIn())
@@ -127,5 +127,81 @@ describe('GET /users/:userId/albums', () => {
           albums: [{ id: 1, title: 'quidem molestiae enim' }]
         });
         dictum.chai(response, 'Test trying to get albums with an admin user');
+      }));
+});
+
+describe('GET /users/albums/:id/photos', () => {
+  beforeEach(() => {
+    albumPhotosMock();
+  });
+  test('Successful test when listing the photos of an album purchased by a regular user', () =>
+    signUp()
+      .then(() => signIn())
+      .then(({ body }) =>
+        controller
+          .post('/albums/1')
+          .set({ token: body.token })
+          .then(() => controller.get('/users/albums/1/photos').set({ token: body.token }))
+      )
+      .then(response => {
+        const { albumPhotos } = response.body;
+        expect({ status: response.statusCode, albumPhotos }).toStrictEqual({
+          status: 200,
+          albumPhotos: [
+            {
+              albumId: 1,
+              id: 1,
+              title: 'accusamus beatae ad facilis cum similique qui sunt',
+              url: 'https://via.placeholder.com/600/92c952',
+              thumbnailUrl: 'https://via.placeholder.com/150/92c952'
+            },
+            {
+              albumId: 1,
+              id: 2,
+              title: 'reprehenderit est deserunt velit ipsam',
+              url: 'https://via.placeholder.com/600/771796',
+              thumbnailUrl: 'https://via.placeholder.com/150/771796'
+            }
+          ]
+        });
+        dictum.chai(response, 'Successful test when listing the photos of the purchased album');
+      }));
+
+  test('Successful test when listing the photos of an album purchased by a user admin', () =>
+    createAdmin(userAdmin)
+      .then(() =>
+        signIn({
+          email: 'nick.hull@wolox.co',
+          password: '12345678'
+        })
+      )
+      .then(({ body }) =>
+        controller
+          .post('/albums/1')
+          .set({ token: body.token })
+          .then(() => controller.get('/users/albums/1/photos').set({ token: body.token }))
+      )
+      .then(response => {
+        const { albumPhotos } = response.body;
+        expect({ status: response.statusCode, albumPhotos }).toStrictEqual({
+          status: 200,
+          albumPhotos: [
+            {
+              albumId: 1,
+              id: 1,
+              title: 'accusamus beatae ad facilis cum similique qui sunt',
+              url: 'https://via.placeholder.com/600/92c952',
+              thumbnailUrl: 'https://via.placeholder.com/150/92c952'
+            },
+            {
+              albumId: 1,
+              id: 2,
+              title: 'reprehenderit est deserunt velit ipsam',
+              url: 'https://via.placeholder.com/600/771796',
+              thumbnailUrl: 'https://via.placeholder.com/150/771796'
+            }
+          ]
+        });
+        dictum.chai(response, 'Successful test when listing the photos of the purchased album');
       }));
 });

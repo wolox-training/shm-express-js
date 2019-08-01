@@ -1,4 +1,11 @@
-const { getAlbums, getPhotosBy, albumRegister, findAlbumBy, findAllAlbumsBy } = require('../services/albums');
+const {
+  getAlbums,
+  getPhotosBy,
+  albumRegister,
+  findAlbumBy,
+  findAllAlbumsBy,
+  getAlbumPhotos
+} = require('../services/albums');
 const logger = require('../logger');
 const message = require('../constants');
 const { decodedToken } = require('../utils');
@@ -33,7 +40,7 @@ exports.buyAlbums = (req, res, next) => {
   logger.info(
     `buyAlbums method start, request methods: ${req.method}, endpoint: ${req.path}, id: ${req.params.id}`
   );
-  return findAlbumBy(req.params)
+  return findAlbumBy({ condition: req.params, attributes: ['id', 'title', 'user_id'] })
     .then(purchasedAlbum => {
       if (purchasedAlbum) {
         return next(errors.buyAlbumError('Duplicate purchase of an album is not allowed'));
@@ -56,7 +63,18 @@ exports.buyAlbums = (req, res, next) => {
 
 exports.getAlbumsList = (req, res, next) => {
   logger.info(`getAlbumsList method start, request methods: ${req.method}, endpoint: ${req.path}`);
-  return findAllAlbumsBy(req.params)
+  return findAllAlbumsBy({ condition: req.params, attributes: ['id', 'title'] })
     .then(albums => res.send({ albums }))
+    .catch(next);
+};
+
+exports.getAlbumPhotosList = (req, res, next) => {
+  const { id } = req.params;
+  logger.info(
+    `getAlbumPhotosList method start, request methods: ${req.method}, endpoint: ${req.path}, id: ${id}`
+  );
+  const user = decodedToken(req.headers.token);
+  return getAlbumPhotos({ id, userId: user.id })
+    .then(albumPhotos => res.send({ albumPhotos }))
     .catch(next);
 };

@@ -33,10 +33,10 @@ exports.getPhotosBy = qs => {
   });
 };
 
-exports.findAlbumBy = option =>
+exports.findAlbumBy = ({ condition, attributes }) =>
   Album.findOne({
-    where: option,
-    attributes: ['id', 'title', 'user_id']
+    where: condition,
+    attributes
   }).catch(() => {
     logger.error('Error trying to find the album');
     throw errors.databaseError(DATABASE_ERROR);
@@ -45,14 +45,23 @@ exports.findAlbumBy = option =>
 exports.albumRegister = album =>
   Album.create(album).catch(() => {
     logger.error(`Error trying to register the album ${album.title}`);
-    throw errors.databaseError('Error processing request in database.');
+    throw errors.databaseError(DATABASE_ERROR);
   });
 
-exports.findAllAlbumsBy = option =>
+exports.findAllAlbumsBy = ({ condition, attributes }) =>
   Album.findAll({
-    where: option,
-    attributes: ['id', 'title']
+    where: condition,
+    attributes
   }).catch(() => {
     logger.info("Error trying to get the user's albums");
-    throw errors.databaseError('Error processing request in database.');
+    throw errors.databaseError(DATABASE_ERROR);
+  });
+
+exports.getAlbumPhotos = ({ id, userId }) =>
+  exports.findAlbumBy({ condition: { id, userId }, attributes: ['id'] }).then(foundAlbum => {
+    if (!foundAlbum) {
+      return [];
+    }
+    const albumId = foundAlbum.dataValues.id;
+    return exports.getPhotosBy({ albumId });
   });
