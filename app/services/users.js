@@ -1,7 +1,7 @@
 const { User } = require('../models');
 const errors = require('../errors');
 const logger = require('../logger');
-const { passwordEncryption, passwordDecryption, generateToken, generateSecret } = require('../utils');
+const { passwordEncryption, passwordDecryption, generateToken } = require('../utils');
 
 exports.userRegister = user =>
   exports
@@ -35,11 +35,11 @@ exports.signIn = ({ email, password }) =>
   exports
     .findUserBy({
       conditions: { email },
-      attributes: ['id', 'firstName', 'lastName', 'email', 'password', 'role', 'secret']
+      attributes: ['id', 'firstName', 'lastName', 'email', 'password', 'role']
     })
     .then(foundUser => {
       if (foundUser) {
-        return passwordDecryption(password, foundUser.password).then(registered =>
+        return passwordDecryption({ password, hash: foundUser.password }).then(registered =>
           registered ? generateToken(foundUser) : null
         );
       }
@@ -73,10 +73,9 @@ exports.changeRole = ({ role, email }) =>
     throw errors.databaseError('Error processing request in database.');
   });
 
-exports.updateSecret = email => {
-  const secret = generateSecret();
-  return User.update(
-    { secret },
+exports.updateAllowedDate = email =>
+  User.update(
+    { allowedDate: Date.now() },
     {
       where: { email }
     }
@@ -84,4 +83,3 @@ exports.updateSecret = email => {
     logger.error('Error trying to update the user');
     throw errors.databaseError('Error processing request in database.');
   });
-};

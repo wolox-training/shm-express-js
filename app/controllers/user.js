@@ -5,7 +5,7 @@ const {
   findAllUsers,
   changeRole,
   findUserBy,
-  updateSecret
+  updateAllowedDate
 } = require('../services/users');
 const logger = require('../logger');
 const { ADMIN_ROLE, REGULAR_ROLE } = require('../constants');
@@ -85,10 +85,10 @@ exports.createAdminUser = (req, res, next) => {
 exports.disableAllSessions = (req, res, next) => {
   logger.info(`disableAllSessions method start, request methods: ${req.method}, endpoint: ${req.path}.`);
   const { email } = decodedToken(req.headers.token);
-  return updateSecret(email)
+  return updateAllowedDate(email)
     .then(() => {
       logger.info(`All sessions for the user ${email} have been disabled successfully`);
-      return res.status(200).send({ message: 'All sessions have been disabled' });
+      return res.send({ message: 'All sessions have been disabled' });
     })
     .catch(next);
 };

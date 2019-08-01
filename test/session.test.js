@@ -89,7 +89,7 @@ describe('POST /users/sessions/invalidate_all', () => {
       .then(response => {
         expect({ status: response.statusCode, message: response.body.message }).toStrictEqual({
           status: 401,
-          message: 'Session error, invalid signature'
+          message: 'Session error, the token has been disabled'
         });
         dictum.chai(response, 'Test tried to disable sessions with a session already disabled');
       }));

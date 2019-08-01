@@ -28,10 +28,11 @@ module.exports = (sequelize, DataTypes) => {
         values: ['regular', 'admin'],
         defaultValue: 'regular'
       },
-      secret: {
+      allowedDate: {
         allowNull: false,
-        type: DataTypes.STRING,
-        defaultValue: 'wolox-training'
+        type: DataTypes.DATE,
+        field: 'allowed_date',
+        defaultValue: Date.now()
       }
     },
     {
