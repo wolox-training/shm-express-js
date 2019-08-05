@@ -33,9 +33,9 @@ exports.getPhotosBy = qs => {
   });
 };
 
-exports.findAlbumBy = ({ condition, attributes }) =>
+exports.findAlbumBy = ({ conditions, attributes }) =>
   Album.findOne({
-    where: condition,
+    where: conditions,
     attributes
   }).catch(() => {
     logger.error('Error trying to find the album');
@@ -48,9 +48,9 @@ exports.albumRegister = album =>
     throw errors.databaseError(DATABASE_ERROR);
   });
 
-exports.findAllAlbumsBy = ({ condition, attributes }) =>
+exports.findAllAlbumsBy = ({ conditions, attributes }) =>
   Album.findAll({
-    where: condition,
+    where: conditions,
     attributes
   }).catch(() => {
     logger.info("Error trying to get the user's albums");
@@ -58,7 +58,7 @@ exports.findAllAlbumsBy = ({ condition, attributes }) =>
   });
 
 exports.getAlbumPhotos = ({ id, userId }) =>
-  exports.findAlbumBy({ condition: { id, userId }, attributes: ['id'] }).then(foundAlbum => {
+  exports.findAlbumBy({ conditions: { id, userId }, attributes: ['id'] }).then(foundAlbum => {
     if (!foundAlbum) {
       return [];
     }

@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 const { User } = require('../models');
 const errors = require('../errors');
 const logger = require('../logger');
@@ -5,7 +7,7 @@ const { passwordEncryption, passwordDecryption, generateToken } = require('../ut
 
 exports.userRegister = user =>
   exports
-    .findUserBy({ email: user.email })
+    .findUserBy({ conditions: { email: user.email } })
     .then(foundUser => {
       if (foundUser) {
         throw errors.badRequest('The email is already registered.');
@@ -22,21 +24,24 @@ exports.userRegister = user =>
       throw error;
     });
 
-exports.findUserBy = option =>
+exports.findUserBy = ({ conditions, attributes }) =>
   User.findOne({
-    where: option,
-    attributes: ['id', 'firstName', 'lastName', 'email', 'password', 'role']
+    where: conditions,
+    attributes
   }).catch(() => {
     logger.error('Error trying to find the user');
     throw errors.databaseError('Error processing request in database.');
   });
 
-exports.signIn = (email, password) =>
+exports.signIn = ({ email, password }) =>
   exports
-    .findUserBy(email)
+    .findUserBy({
+      conditions: { email },
+      attributes: ['id', 'firstName', 'lastName', 'email', 'password', 'role']
+    })
     .then(foundUser => {
       if (foundUser) {
-        return passwordDecryption(password, foundUser.password).then(registered =>
+        return passwordDecryption({ password, hash: foundUser.password }).then(registered =>
           registered ? generateToken(foundUser) : null
         );
       }
@@ -49,7 +54,7 @@ exports.signIn = (email, password) =>
       throw errors.sessionError('Your email or password is incorrect.');
     });
 
-exports.findAllUsers = (limit, offset) =>
+exports.findAllUsers = ({ limit, offset }) =>
   User.findAndCountAll({
     limit,
     offset,
@@ -59,7 +64,7 @@ exports.findAllUsers = (limit, offset) =>
     throw errors.databaseError('Error processing request in database.');
   });
 
-exports.changeRole = (role, email) =>
+exports.changeRole = ({ role, email }) =>
   User.update(
     { role },
     {
@@ -70,42 +75,13 @@ exports.changeRole = (role, email) =>
     throw errors.databaseError('Error processing request in database.');
   });
 
-exports.findUser = email =>
-  User.findOne({
-    where: { email },
-    raw: true,
-    attributes: ['id', 'firstName', 'lastName', 'email', 'password', 'role']
-  }).catch(err => {
-    logger.info('Error trying to find the user');
-    throw errors.databaseError(`${err}`);
-  });
-
-exports.findAllUser = (limit, offset) =>
-  User.findAndCountAll({
-    limit,
-    offset,
-    raw: true,
-    attributes: ['id', 'firstName', 'lastName', 'email']
-  }).catch(err => {
-    logger.info('Error trying to find the user');
-    throw errors.databaseError(`${err}`);
-  });
-
-exports.AdminUserRegister = user =>
-  User.create({ ...user, role: 'admin' }).catch(() => {
-    logger.info(`Error trying to create the user ${user.firstName} ${user.lastName}`);
-    throw errors.databaseError('Error processing request in database.');
-  });
-
-exports.changeRole = email =>
+exports.updateAllowedDate = email =>
   User.update(
-    { role: 'admin' },
+    { allowedDate: moment().unix() },
     {
-      where: { email },
-      raw: true,
-      returning: true
+      where: { email }
     }
   ).catch(() => {
-    logger.info('Error trying to update the user');
+    logger.error('Error trying to update the user');
     throw errors.databaseError('Error processing request in database.');
   });

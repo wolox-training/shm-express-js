@@ -40,7 +40,7 @@ exports.buyAlbums = (req, res, next) => {
   logger.info(
     `buyAlbums method start, request methods: ${req.method}, endpoint: ${req.path}, id: ${req.params.id}`
   );
-  return findAlbumBy({ condition: req.params, attributes: ['id', 'title', 'user_id'] })
+  return findAlbumBy({ conditions: req.params, attributes: ['id', 'title', 'user_id'] })
     .then(purchasedAlbum => {
       if (purchasedAlbum) {
         return next(errors.buyAlbumError('Duplicate purchase of an album is not allowed'));

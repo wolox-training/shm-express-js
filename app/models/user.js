@@ -1,4 +1,7 @@
 'use strict';
+
+const moment = require('moment');
+
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
     'User',
@@ -27,6 +30,12 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.ENUM,
         values: ['regular', 'admin'],
         defaultValue: 'regular'
+      },
+      allowedDate: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        field: 'allowed_date',
+        defaultValue: moment().unix()
       }
     },
     {
