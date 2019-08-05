@@ -3,7 +3,7 @@ const dictum = require('dictum.js');
 
 const app = require('../app');
 const { User } = require('../app/models');
-const { signUp, createAdmin, signIn } = require('./utils/session');
+const { signUp, createAdmin, signIn } = require('./utils/users');
 
 const controller = request(app);
 

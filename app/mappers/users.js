@@ -8,9 +8,3 @@ exports.mapperUserList = ({ count, rows }, limit, page) => {
     page
   };
 };
-
-exports.albumMapper = (id, title, userId) => ({
-  id,
-  title,
-  userId
-});

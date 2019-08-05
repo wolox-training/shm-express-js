@@ -2,10 +2,9 @@ const request = require('supertest');
 const dictum = require('dictum.js');
 
 const app = require('../app');
-const utils = require('../app/utils');
-const { signUp, signIn } = require('./utils/session');
-const { secret_test } = require('../config').common.session;
-const { expireToken } = require('./utils/session');
+const { validateToken } = require('../app/utils');
+const { signUp, signIn } = require('./utils/users');
+const { expireToken } = require('./utils/users');
 
 const controller = request(app);
 
@@ -14,7 +13,7 @@ describe('POST /users/sessions', () => {
     signUp()
       .then(() => signIn())
       .then(userSignIn =>
-        utils.validateToken(userSignIn.body.token, secret_test).then(token => ({
+        validateToken(userSignIn.body.token).then(token => ({
           response: userSignIn,
           token
         }))
@@ -67,7 +66,7 @@ describe('POST /users/sessions', () => {
   test('Test trying to sign in with a token that has expired', () =>
     signUp()
       .then(() => signIn())
-      .then(({ body }) => expireToken(body, secret_test))
+      .then(({ body }) => expireToken(body))
       .then(token => controller.get('/users').set({ token }))
       .then(response => {
         const { message, internal_code } = response.body;
@@ -105,7 +104,7 @@ describe('POST /users/sessions/invalidate_all', () => {
       .then(response => {
         expect({ status: response.statusCode, message: response.body.message }).toStrictEqual({
           status: 401,
-          message: 'Session error, invalid signature'
+          message: 'Session error, the token has been disabled'
         });
         dictum.chai(response, 'Test tried to disable sessions with a session already disabled');
       }));

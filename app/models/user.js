@@ -1,4 +1,7 @@
 'use strict';
+
+const moment = require('moment');
+
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
     'User',
@@ -28,10 +31,11 @@ module.exports = (sequelize, DataTypes) => {
         values: ['regular', 'admin'],
         defaultValue: 'regular'
       },
-      secret: {
+      allowedDate: {
         allowNull: false,
-        type: DataTypes.STRING,
-        defaultValue: 'wolox-training'
+        type: DataTypes.INTEGER,
+        field: 'allowed_date',
+        defaultValue: moment().unix()
       }
     },
     {
