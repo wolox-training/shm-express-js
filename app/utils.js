@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken-promisified');
 
 const errors = require('./errors');
-const { salt_rounds, secret } = require('../config').common.session;
+const { salt_rounds, secret, expiresIn } = require('../config').common.session;
 
 exports.passwordEncryption = user =>
   bcrypt
@@ -19,7 +19,7 @@ exports.passwordDecryption = ({ password, hash }) =>
   });
 
 exports.generateToken = ({ id, firstName, lastName, email, role }) =>
-  jwt.signAsync({ id, firstName, lastName, email, role }, secret).catch(() => {
+  jwt.signAsync({ id, firstName, lastName, email, role }, secret, { expiresIn }).catch(() => {
     throw errors.generateTokenError();
   });
 

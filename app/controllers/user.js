@@ -11,6 +11,7 @@ const logger = require('../logger');
 const { ADMIN_ROLE, REGULAR_ROLE } = require('../constants');
 const errors = require('../errors');
 const { decodedToken } = require('../utils');
+const { expiresIn } = require('../../config').common.session;
 
 exports.createUser = (req, res, next) => {
   const user = req.body;
@@ -35,7 +36,7 @@ exports.signInUser = (req, res, next) => {
     `SignInUser method start, request methods: ${req.method}, endpoint: ${req.path}, email: ${email}`
   );
   return signIn({ email, password })
-    .then(token => res.send({ token }))
+    .then(token => res.send({ token, Message: `Your session will expire at ${expiresIn}` }))
     .catch(next);
 };
 

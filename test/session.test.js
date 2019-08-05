@@ -2,9 +2,9 @@ const request = require('supertest');
 const dictum = require('dictum.js');
 
 const app = require('../app');
-const utils = require('../app/utils');
+const { validateToken } = require('../app/utils');
 const { signUp, signIn } = require('./utils/users');
-const { secret_test } = require('../config').common.session;
+const { expireToken } = require('./utils/users');
 
 const controller = request(app);
 
@@ -13,7 +13,7 @@ describe('POST /users/sessions', () => {
     signUp()
       .then(() => signIn())
       .then(userSignIn =>
-        utils.validateToken(userSignIn.body.token, secret_test).then(token => ({
+        validateToken(userSignIn.body.token).then(token => ({
           response: userSignIn,
           token
         }))
@@ -58,6 +58,21 @@ describe('POST /users/sessions', () => {
         expect({ status: response.statusCode, message, internal_code }).toStrictEqual({
           status: 401,
           message: 'Your email or password is incorrect.',
+          internal_code: 'session_error'
+        });
+        dictum.chai(response, 'Test when you sign in with the wrong password');
+      }));
+
+  test('Test trying to sign in with a token that has expired', () =>
+    signUp()
+      .then(() => signIn())
+      .then(({ body }) => expireToken(body))
+      .then(token => controller.get('/users').set({ token }))
+      .then(response => {
+        const { message, internal_code } = response.body;
+        expect({ status: response.statusCode, message, internal_code }).toStrictEqual({
+          status: 401,
+          message: 'Session error, jwt expired',
           internal_code: 'session_error'
         });
         dictum.chai(response, 'Test when you sign in with the wrong password');
