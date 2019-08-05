@@ -1,5 +1,3 @@
-const moment = require('moment');
-
 const { validateToken, decodedToken } = require('../utils');
 const errors = require('../errors');
 const { findUserBy } = require('../services/users');
@@ -11,8 +9,7 @@ exports.tokenValidator = (req, res, next) => {
       .then(() => {
         const { email, iat } = decodedToken(token);
         return findUserBy({ email }, ['allowedDate']).then(({ allowedDate }) => {
-          const dateToken = moment.unix(iat);
-          if (dateToken > allowedDate) {
+          if (iat > allowedDate) {
             return next();
           }
           return next(errors.sessionError('Session error, the token has been disabled'));

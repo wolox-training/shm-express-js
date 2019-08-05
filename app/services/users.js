@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 const { User } = require('../models');
 const errors = require('../errors');
 const logger = require('../logger');
@@ -75,7 +77,7 @@ exports.changeRole = ({ role, email }) =>
 
 exports.updateAllowedDate = email =>
   User.update(
-    { allowedDate: Date.now() },
+    { allowedDate: moment().unix() },
     {
       where: { email }
     }

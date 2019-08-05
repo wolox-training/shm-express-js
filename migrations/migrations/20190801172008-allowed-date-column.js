@@ -1,11 +1,13 @@
 'use strict';
 
+const moment = require('moment');
+
 module.exports = {
   up: (queryInterface, Sequelize) =>
     queryInterface.addColumn('users', 'allowed_date', {
-      type: Sequelize.DATE,
+      type: Sequelize.INTEGER,
       allowNull: false,
-      defaultValue: Sequelize.NOW
+      defaultValue: moment().unix()
     }),
 
   down: queryInterface => queryInterface.removeColumn('users', 'allowed_date')

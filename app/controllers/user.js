@@ -58,7 +58,7 @@ exports.createAdminUser = (req, res, next) => {
   user.role = ADMIN_ROLE;
   logger.info(`createAdminUser method start, request methods: ${req.method}, endpoint: ${req.path},
   user: ${user.firstName} ${user.lastName}`);
-  findUserBy({
+  return findUserBy({
     conditions: { email },
     attributes: ['id', 'firstName', 'lastName', 'email', 'password', 'role']
   })
